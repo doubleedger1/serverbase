@@ -3,7 +3,7 @@
 -------------------
 ChatAdTime = 180 --This will print a helpful message every number of seconds.
  
-ChatAdEnabled = true --Set this to false if you don't want ChatMessages printed ever ChatAdTime seconds.
+ChatAdEnabled = true --Set this to false if you don't want ChatMessages printed every ChatAdTime seconds.
 
 ChatMessages = {}
 ChatMessages[1] = "Report a rulebreaking player on our website at www.mywebsite.com"
