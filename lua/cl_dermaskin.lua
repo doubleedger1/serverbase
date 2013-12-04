@@ -1,7 +1,6 @@
 local SKIN = {}
  
-function SKIN:PaintFrame(panel)
-		local w, h = panel:GetSize()
+function SKIN:PaintFrame(panel, w, h)
 		
 		draw.RoundedBox(-1, 0, 0, w, h, Color(0, 0, 0, 200))
 		panel:SetTitle("")
@@ -10,24 +9,21 @@ function SKIN:PaintFrame(panel)
 		surface.DrawOutlinedRect(0, 0, w, h)
 end
 	
-function SKIN:PaintPanel(panel)
-	local w, h = panel:GetSize()
+function SKIN:PaintPanel(panel, w, h)
 	
 	draw.RoundedBox(-1, 0, 0, w, h, Color(220, 220, 220 , 255))
 	surface.SetDrawColor(Color(0, 0, 0, 200))
 	surface.DrawOutlinedRect(0, 0, w, h)
 end
 
-function SKIN:PaintListView(panel)
-	local w, h = panel:GetSize()
+function SKIN:PaintListView(panel, w, h)
 		
 	draw.RoundedBox(-1, 0, 0, w, h, Color(200, 200, 200, 250))
 	surface.SetDrawColor(Color(0, 0, 0, 200))
 	surface.DrawOutlinedRect(0, 0, w, h)
 end
 	
-function SKIN:PaintListViewLine(panel)
-	local w, h = panel:GetSize()
+function SKIN:PaintListViewLine(panel, w, h)
 	
 	if ( panel.Depressed || panel.m_bSelected ) then
 		return draw.RoundedBox(-1, 0, 0, w, h, Color(250, 0, 0, 255))
@@ -43,8 +39,7 @@ function SKIN:PaintListViewLine(panel)
 	draw.RoundedBox(-1, 0, 0, w, h, Color(200, 200, 200, 200))
 end
 
-function SKIN:PaintButton(panel)
-	local w, h = panel:GetSize()
+function SKIN:PaintButton(panel, w, h)
 	
 	panel:SetTextColor(Color(255, 255, 255, 255))
 	if ( panel.Depressed ) then
