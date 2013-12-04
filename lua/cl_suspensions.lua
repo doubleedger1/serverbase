@@ -16,7 +16,7 @@ surface.CreateFont("Section", {
 	weight      = 800
 })
 
-BansReceived = {}
+local BansReceived = {}
 net.Receive("sendbans", function()
 	BansReceived = net.ReadTable()
 end)
@@ -134,7 +134,7 @@ function EditSuspension(steamid, name)
 	end
 end
 	
-concommand.Add("suspensions", function(ply, cmd, args)
+concommand.Add("sv_suspensions", function(ply, cmd, args)
 	if ( !ply:IsAdmin() ) then return end
 	net.Start("requestthebans")
 	net.SendToServer()
