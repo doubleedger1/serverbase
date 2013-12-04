@@ -16,7 +16,7 @@ surface.CreateFont("Section", {
 	weight      = 800
 })
 	
-concommand.Add("sv_admin", function(ply, cmd, args)
+concommand.Add("sb_admin", function(ply, cmd, args)
 	if ( !ply:IsAdmin() ) then return end
 	setdata = setdata or 1
 	local frame = vgui.Create("DFrame")
