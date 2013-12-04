@@ -1,4 +1,4 @@
-concommand.Add("shop", function(ply, cmd, args) 
+concommand.Add("sb_shop", function(ply, cmd, args) 
 	local shopframe = vgui.Create("DFrame")
 	shopframe:SetSize(800, 600)
 	shopframe:SetSkin("ServerBase")
