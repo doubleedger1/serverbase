@@ -129,12 +129,12 @@ function EditSuspension(steamid, name)
 				net.WriteString(ID)
 			net.SendToServer()
 			frameedit:Close()	
-			LocalPlayer():ConCommand("suspensions")
+			LocalPlayer():ConCommand("sb_suspensions")
 		end
 	end
 end
 	
-concommand.Add("sv_suspensions", function(ply, cmd, args)
+concommand.Add("sb_suspensions", function(ply, cmd, args)
 	if ( !ply:IsAdmin() ) then return end
 	net.Start("requestthebans")
 	net.SendToServer()
@@ -346,7 +346,7 @@ concommand.Add("sv_suspensions", function(ply, cmd, args)
 			net.WriteString(bansteamidtext:GetValue())
 		net.SendToServer()
 		frame:Close()	
-		LocalPlayer():ConCommand("suspensions")
+		LocalPlayer():ConCommand("sb_suspensions")
 	end
 	
 	end)
