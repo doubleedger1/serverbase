@@ -23,7 +23,7 @@ end)
 
 
 	
-function EditSuspension(steamid, name)
+local function EditSuspension(steamid, name)
 	if ( !LocalPlayer():IsAdmin() ) then return end
 	local ID = string.Replace(steamid, ":", "_")
 	local Nick = name
