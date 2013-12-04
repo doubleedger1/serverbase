@@ -4,7 +4,7 @@ Servers = {
 	{"PlaceHolder3", "37.187.77.51:27017", "This is the Retro Team Play server"},
 }
 
-concommand.Add("portal", function(ply, cmd, args)
+concommand.Add("sb_portal", function(ply, cmd, args)
 	local portalframe = vgui.Create("DFrame")
 	portalframe:SetSize(500, 500)
 	portalframe:SetPos(ScrW() / 4, ScrH() / 4)
