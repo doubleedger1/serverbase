@@ -22,9 +22,9 @@ util.AddNetworkString("requestthebans")
 
 net.Receive("requestthebans", function()
 	local tbl = {}
-	local files = file.Find("seasbans/*.txt", "DATA")
+	local files = file.Find("sbbans/*.txt", "DATA")
 	for _, v in pairs (files) do
-		local bantbl = util.JSONToTable(file.Read("seasbans/" .. v, "DATA"))
+		local bantbl = util.JSONToTable(file.Read("sbbans/" .. v, "DATA"))
 		table.insert(tbl, bantbl)
 	end
 	
@@ -34,23 +34,23 @@ net.Receive("requestthebans", function()
 end)
 
 hook.Add("PlayerInitialSpawn", "LoadThatStuff", function(ply)
-	if (!file.IsDir("seasbans", "DATA")) then
-		file.CreateDir("seasbans")
+	if (!file.IsDir("sbbans", "DATA")) then
+		file.CreateDir("sbbans")
 	end
 	
-	local files  = file.Find("seasbans/*.txt", "DATA")
+	local files  = file.Find("sbbans/*.txt", "DATA")
 	for k, v in pairs (files) do
-		local fileopen = file.Read("seasbans/" ..v)
+		local fileopen = file.Read("sbbans/" ..v)
 		local jasontable = util.JSONToTable(fileopen)
 		if ( tonumber(jasontable[3]) <= os.time() ) then   
-			file.Delete("seasbans/" ..v)  
+			file.Delete("sbbans/" ..v)  
 		end
 	end
 	
 	local tbl = {}
-	local files = file.Find("seasbans/*.txt", "DATA")
+	local files = file.Find("sbbans/*.txt", "DATA")
 	for _, v in pairs (files) do
-		local bantbl = util.JSONToTable(file.Read("seasbans/" .. v, "DATA"))
+		local bantbl = util.JSONToTable(file.Read("sbbans/" .. v, "DATA"))
 		table.insert(tbl, bantbl)
 	end
 
@@ -64,12 +64,12 @@ hook.Add("PlayerInitialSpawn", "CheckSuspension", function(ply)
 	ply.CanTalk = ply.CanTalk or true
 	ply.CanType = ply.CanType or true
 	local ID = string.Replace(ply:SteamID(), ":", "_")
-	if ( file.Exists("seasbans/"..ID..".txt", "DATA") ) then
-		local banfile = file.Read("seasbans/"..ID..".txt")
+	if ( file.Exists("sbbans/"..ID..".txt", "DATA") ) then
+		local banfile = file.Read("sbbans/"..ID..".txt")
 		local JSON = util.JSONToTable(banfile)
 		if ( JSON[6] == "BAN" ) then
 			if ( tonumber(JSON[3]) <= os.time() ) then
-				file.Delete("seasbans/"..ID..".txt")
+				file.Delete("sbbans/"..ID..".txt")
 				ply:ChatPrint("Your ban has recently expired.")
 				return
 			end
@@ -87,12 +87,12 @@ end)
 hook.Add("PlayerSay", "CheckIfPlayerCanType", function(ply, text, public)
 	
 	local ID = string.Replace(ply:SteamID(), ":", "_")
-	if ( file.Exists("seasbans/"..ID..".txt", "DATA") ) then
-		local banfile = file.Read("seasbans/"..ID..".txt")
+	if ( file.Exists("sbbans/"..ID..".txt", "DATA") ) then
+		local banfile = file.Read("sbbans/"..ID..".txt")
 		local JSON = util.JSONToTable(banfile)
 		if ( JSON[6] == "MUTE" ) then
 			if ( tonumber(JSON[3]) <= os.time() ) then
-				file.Delete("seasbans/"..ID..".txt")
+				file.Delete("sbbans/"..ID..".txt")
 				ply:ChatPrint("Your mute has recently expired.")
 			else
 				ply:ChatPrint("You are muted.")
@@ -104,12 +104,12 @@ end)
 
 hook.Add("PlayerCanHearPlayersVoice", "PreventVoiceMute", function(listen, talk)
 	local ID = string.Replace(talk:SteamID(), ":", "_")
-	if ( file.Exists("seasbans/"..ID..".txt", "DATA") ) then
-	local banfile = file.Read("seasbans/"..ID..".txt")
+	if ( file.Exists("sbbans/"..ID..".txt", "DATA") ) then
+	local banfile = file.Read("sbbans/"..ID..".txt")
 	local JSON = util.JSONToTable(banfile)
 		if ( JSON[6] == "VOICEMUTE" ) then
 			if ( tonumber(JSON[3]) <= os.time() ) then
-				file.Delete("seasbans/"..ID..".txt")
+				file.Delete("sbbans/"..ID..".txt")
 				talk:ChatPrint("Your voicemute has recently expired")
 				return true, true
 			else
@@ -121,7 +121,7 @@ hook.Add("PlayerCanHearPlayersVoice", "PreventVoiceMute", function(listen, talk)
 	end
 end)
 	
-concommand.Add("seas_ban", function(ply, cmd, args)
+concommand.Add("sb_ban", function(ply, cmd, args)
 	if ( !ply:IsAdmin() ) then return end
 	
 	local ID = tonumber(args[1])
@@ -137,14 +137,14 @@ concommand.Add("seas_ban", function(ply, cmd, args)
 			local steamid2 = string.Replace(v:SteamID(), ":", "_")
 			local bantable = {v:Nick(), v:SteamID(), tostring(os.time() + duration), reason, ply:Nick(), "BAN"}
 			local jstring = util.TableToJSON(bantable)
-			file.Write("seasbans/" ..steamid2..".txt", jstring)
+			file.Write("sbbans/" ..steamid2..".txt", jstring)
 			v:Kick("You have been banned: " ..reason)
-			PrintMessage( HUD_PRINTTALK, "[SEAS] Admin " ..ply:Nick().. " has banned " ..v:Nick().. " with reason: " ..reason)
+			PrintMessage( HUD_PRINTTALK, "[ServerBase] Admin " ..ply:Nick().. " has banned " ..v:Nick().. " with reason: " ..reason)
 		end
 	end
 end)
 	
-concommand.Add("seas_kick", function(ply, cmd, args)
+concommand.Add("sb_kick", function(ply, cmd, args)
 	if ( !ply:IsAdmin() ) then return end
 	
 	local ID = tonumber(args[1])
@@ -153,12 +153,12 @@ concommand.Add("seas_kick", function(ply, cmd, args)
 	for k, v in pairs (player.GetAll()) do
 		if ( v:UserID() == ID ) then
 			v:Kick(reason)
-			PrintMessage( HUD_PRINTTALK, "[SEAS] Admin " ..ply:Nick().. " has kicked " ..v:Nick().. " with reason: " ..reason)
+			PrintMessage( HUD_PRINTTALK, "[ServerBase] Admin " ..ply:Nick().. " has kicked " ..v:Nick().. " with reason: " ..reason)
 		end
 	end
 end)
 	
-concommand.Add("seas_slay", function(ply, cmd ,args)
+concommand.Add("sb_slay", function(ply, cmd ,args)
 	if ( !ply:IsAdmin() ) then return end
 	
 	local ID = tonumber(args[1])
@@ -166,12 +166,12 @@ concommand.Add("seas_slay", function(ply, cmd ,args)
 	for k, v in pairs (player.GetAll()) do
 		if ( v:UserID() == ID ) then
 			v:Kill()
-			PrintMessage( HUD_PRINTTALK, "[SEAS] Admin " ..ply:Nick().. " has slain " ..v:Nick())
+			PrintMessage( HUD_PRINTTALK, "[ServerBase] Admin " ..ply:Nick().. " has slain " ..v:Nick())
 		end
 	end
 end)
 	
-concommand.Add("seas_mute", function(ply, cmd, args)
+concommand.Add("sb_mute", function(ply, cmd, args)
 	if ( !ply:IsAdmin() ) then return end
 	
 	local ID = tonumber(args[1])
@@ -186,14 +186,14 @@ concommand.Add("seas_mute", function(ply, cmd, args)
 			local steamid2 = string.Replace(v:SteamID(), ":", "_")
 			local bantable = {v:Nick(), v:SteamID(), tostring(os.time() + duration), reason, ply:Nick(), "MUTE"}
 			local jstring = util.TableToJSON(bantable)
-			file.Write("seasbans/" ..steamid2..".txt", jstring)
+			file.Write("sbbans/" ..steamid2..".txt", jstring)
 			v.CanType = false
-			PrintMessage( HUD_PRINTTALK, "[SEAS] Admin " ..ply:Nick().. " has muted " ..v:Nick().. " with reason: " ..reason)
+			PrintMessage( HUD_PRINTTALK, "[ServerBase] Admin " ..ply:Nick().. " has muted " ..v:Nick().. " with reason: " ..reason)
 		end
 	end
 end)
 	
-concommand.Add("seas_voicemute", function(ply, cmd, args)
+concommand.Add("sb_voicemute", function(ply, cmd, args)
 	if ( !ply:IsAdmin() ) then return end
 	
 	local ID = tonumber(args[1])
@@ -205,14 +205,14 @@ concommand.Add("seas_voicemute", function(ply, cmd, args)
 			local steamid2 = string.Replace(v:SteamID(), ":", "_")
 			local bantable = {v:Nick(), v:SteamID(), tostring(os.time() + duration), reason, ply:Nick(), "VOICEMUTE"}
 			local jstring = util.TableToJSON(bantable)
-			file.Write("seasbans/" ..steamid2..".txt", jstring)
+			file.Write("sbbans/" ..steamid2..".txt", jstring)
 		v.CanTalk = false
-		PrintMessage( HUD_PRINTTALK, "[SEAS] Admin " ..ply:Nick().. " has voicemuted " ..v:Nick().. " with reason: " ..reason)
+		PrintMessage( HUD_PRINTTALK, "[ServerBase] Admin " ..ply:Nick().. " has voicemuted " ..v:Nick().. " with reason: " ..reason)
 		end
 	end
 end)
 
-concommand.Add("seas_teleporttome", function(ply, cmd, args)
+concommand.Add("sb_teleporttome", function(ply, cmd, args)
 	if ( !ply:IsAdmin() ) then return end
 	
 	local ID = tonumber(args[1])
@@ -220,12 +220,12 @@ concommand.Add("seas_teleporttome", function(ply, cmd, args)
 	for k ,v in pairs( player.GetAll()) do
 		if ( v:UserID() == ID ) then
 			v:SetPos(ply:GetPos() + Vector(0, 50, 10))
-			PrintMessage( HUD_PRINTTALK, "[SEAS] Admin " ..ply:Nick().. " teleported " ..v:Nick().. " to his position")
+			PrintMessage( HUD_PRINTTALK, "[ServerBase] Admin " ..ply:Nick().. " teleported " ..v:Nick().. " to his position")
 		end
 	end
 end)
 	
-concommand.Add("seas_teleporttothem", function(ply, cmd, args)
+concommand.Add("sb_teleporttothem", function(ply, cmd, args)
 	if ( !ply:IsAdmin() ) then return end
 	
 	local ID = tonumber(args[1])
@@ -233,7 +233,7 @@ concommand.Add("seas_teleporttothem", function(ply, cmd, args)
 	for k, v in pairs (player.GetAll()) do
 		if ( v:UserID() == ID ) then
 			ply:SetPos(v:GetPos() + Vector(0, 50, 10))
-			PrintMessage( HUD_PRINTTALK, "[SEAS] Admin " ..ply:Nick().. " teleported to " ..v:Nick().."'s position")
+			PrintMessage( HUD_PRINTTALK, "[ServerBase] Admin " ..ply:Nick().. " teleported to " ..v:Nick().."'s position")
 		end
 	end
 end)
@@ -247,8 +247,8 @@ end)
 -- This removes the suspensions.
 net.Receive("removesuspension", function()
 	local steamid2 = string.Replace(net.ReadString(), ":", "_")
-	if ( file.Exists("seasbans/" ..steamid2..".txt", "DATA") ) then
-		file.Delete("seasbans/" ..steamid2..".txt")
+	if ( file.Exists("sbbans/" ..steamid2..".txt", "DATA") ) then
+		file.Delete("sbbans/" ..steamid2..".txt")
 	end
 end)
 
@@ -257,7 +257,7 @@ net.Receive("modifysuspension", function()
 	local value = net.ReadTable()
 	local json = util.TableToJSON(value)
 	local ply = net.ReadString()
-	file.Write("seasbans/"..ply..".txt", json)
+	file.Write("sbbans/"..ply..".txt", json)
 end)
 
 -- This adds suspensions.
@@ -265,16 +265,16 @@ net.Receive("addban", function()
 	local tbl = util.TableToJSON(net.ReadTable())
 	local steamid = net.ReadString()
 	local val = string.Replace(steamid, ":", "_")
-	file.Write("seasbans/"..val..".txt", tbl)
+	file.Write("sbbans/"..val..".txt", tbl)
 end)
 
 function DisableNoclip( objPl )
 	if ( objPl:IsAdmin() ) then
 		local noclip = objPl:GetMoveType() == MOVETYPE_NOCLIP
 		if ( noclip ) then
-			PrintMessage( HUD_PRINTTALK, "[SEAS] Admin " ..objPl:Nick().. " has disabled noclip")
+			PrintMessage( HUD_PRINTTALK, "[ServerBase] Admin " ..objPl:Nick().. " has disabled noclip")
 		else 
-			PrintMessage( HUD_PRINTTALK, "[SEAS] Admin " ..objPl:Nick().. " has enabled noclip")
+			PrintMessage( HUD_PRINTTALK, "[ServerBase] Admin " ..objPl:Nick().. " has enabled noclip")
 		end
 	end
 	return objPl:IsAdmin()

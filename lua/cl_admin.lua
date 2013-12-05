@@ -98,7 +98,7 @@ concommand.Add("sb_admin", function(ply, cmd, args)
 	end
 	suspensions.DoClick = function()
 		frame:Close()
-		LocalPlayer():ConCommand("suspensions")
+		LocalPlayer():ConCommand("sb_suspensions")
 	end
 	
 	local playerlist = vgui.Create("DListView", frame)
@@ -145,7 +145,7 @@ concommand.Add("sb_admin", function(ply, cmd, args)
 	banbutton:SetPos(265, 45)
 	banbutton:SetText("Ban Player")
 	banbutton.DoClick = function()
-		RunConsoleCommand("seas_ban", setdata, bandurationentry:GetValue(), banreasonentry:GetValue())
+		RunConsoleCommand("sb_ban", setdata, bandurationentry:GetValue(), banreasonentry:GetValue())
 		frame:Close()
 		timer.Simple(0.6, function() 
 			LocalPlayer():ConCommand("admin")
@@ -185,7 +185,7 @@ concommand.Add("sb_admin", function(ply, cmd, args)
 	mutebutton:SetPos(265, 45)
 	mutebutton:SetText("Mute Player")
 	mutebutton.DoClick = function()
-		RunConsoleCommand("seas_mute", setdata, mutedurationentry:GetValue(), mutereasonentry:GetValue())
+		RunConsoleCommand("sb_mute", setdata, mutedurationentry:GetValue(), mutereasonentry:GetValue())
 	end
 	
 	local voicemutepanel = vgui.Create("DPanel", frame)
@@ -221,7 +221,7 @@ concommand.Add("sb_admin", function(ply, cmd, args)
 	voicemutebutton:SetPos(265, 45)
 	voicemutebutton:SetText("Voicemute Player")
 	voicemutebutton.DoClick = function()
-		RunConsoleCommand("seas_voicemute", setdata, voicemutedurationentry:GetValue(), voicemutereasonentry:GetValue())
+		RunConsoleCommand("sb_voicemute", setdata, voicemutedurationentry:GetValue(), voicemutereasonentry:GetValue())
 	end
 	
 	local miscbuttons = vgui.Create("DPanel", frame)
@@ -238,7 +238,7 @@ concommand.Add("sb_admin", function(ply, cmd, args)
 	kickbutton:SetText("Kick Player")
 	kickbutton:SetPos(20, 55)
 	kickbutton.DoClick = function()
-		RunConsoleCommand("seas_kick", "" ..setdata.. "", kickentry:GetValue())
+		RunConsoleCommand("sb_kick", "" ..setdata.. "", kickentry:GetValue())
 		frame:Close()
 		timer.Simple(0.3, function()
 			LocalPlayer():ConCommand("admin")
@@ -250,7 +250,7 @@ concommand.Add("sb_admin", function(ply, cmd, args)
 	slaybutton:SetText("Slay Player")
 	slaybutton:SetPos(140, 55)
 	slaybutton.DoClick = function()
-		RunConsoleCommand("seas_slay", "" ..setdata.. "")
+		RunConsoleCommand("sb_slay", "" ..setdata.. "")
 	end
 	
 	local teleporttome = vgui.Create("DButton", miscbuttons)
@@ -258,7 +258,7 @@ concommand.Add("sb_admin", function(ply, cmd, args)
 	teleporttome:SetText("Teleport To Me")
 	teleporttome:SetPos(140, 25)
 	teleporttome.DoClick = function()
-		RunConsoleCommand("seas_teleporttome", setdata)
+		RunConsoleCommand("sb_teleporttome", setdata)
 	end
 	
 	local teleporttothem = vgui.Create("DButton", miscbuttons)
@@ -266,7 +266,7 @@ concommand.Add("sb_admin", function(ply, cmd, args)
 	teleporttothem:SetText("Teleport To Them")
 	teleporttothem:SetPos(260, 25)
 	teleporttothem.DoClick = function()
-		RunConsoleCommand("seas_teleporttothem", setdata)
+		RunConsoleCommand("sb_teleporttothem", setdata)
 	end
 
 	

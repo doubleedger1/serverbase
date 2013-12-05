@@ -39,6 +39,11 @@ function SKIN:PaintListViewLine(panel, w, h)
 	draw.RoundedBox(-1, 0, 0, w, h, Color(200, 200, 200, 200))
 end
 
+function SKIN:PaintPropertySheet(panel, w, h)
+	
+	draw.RoundedBox(-1, 0, 0, w, h, Color(0, 0, 0, 200))
+end
+
 function SKIN:PaintButton(panel, w, h)
 	
 	panel:SetTextColor(Color(255, 255, 255, 255))

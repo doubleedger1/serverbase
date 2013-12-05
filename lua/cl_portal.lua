@@ -50,9 +50,10 @@ concommand.Add("sb_portal", function(ply, cmd, args)
 	end
 	
 	local serverpanel = vgui.Create("DPanelList", portalframe)
-	serverpanel:SetSize(500, 485)
+	serverpanel:SetSize(499, 485)
 	serverpanel:EnableVerticalScrollbar(true)
-	serverpanel:SetPos(0, 45)
+	serverpanel:SetSpacing(5)
+	serverpanel:SetPos(1, 45)
 	serverpanel.Paint = function()
 		local w, h = serverpanel:GetSize()
 		
@@ -72,6 +73,26 @@ concommand.Add("sb_portal", function(ply, cmd, args)
 				LocalPlayer():ConCommand("connect " .. v[2])
 			end)
 		end
+		button.Paint = function()
+		panel = button
+		local w, h = panel:GetSize()
+		panel:SetTextColor(Color(255, 255, 255, 255))
+		if ( panel.Depressed ) then
+			return draw.RoundedBox(-1, 0, 0, w, h, Color(0, 0, 0, 255))
+		end
+	
+		if ( panel.Hovered ) then
+			return draw.RoundedBox(-1, 0, 0, w, h, Color(50, 50, 50, 255))
+		end
+	
+	
+		if ( panel:GetDisabled() ) then
+			return draw.RoundedBox(-1, 0, 0, w, h, Color(0, 0, 0, 200))
+		end
+		surface.SetDrawColor(Color(255, 255, 255, 255))
+		surface.DrawOutlinedRect(0, 0, w, h)
+		draw.RoundedBox(-1, 0, 0, w, h, Color(10, 0, 75, 255))
+	end
 		serverpanel:AddItem(button)
 	end
 	

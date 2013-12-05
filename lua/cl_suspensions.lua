@@ -27,8 +27,8 @@ local function EditSuspension(steamid, name)
 	if ( !LocalPlayer():IsAdmin() ) then return end
 	local ID = string.Replace(steamid, ":", "_")
 	local Nick = name
-	if ( file.Exists("seasbans/"..ID..".txt", "DATA") ) then
-		local fileopen = file.Read("seasbans/"..ID..".txt")
+	if ( file.Exists("sbbans/"..ID..".txt", "DATA") ) then
+		local fileopen = file.Read("sbbans/"..ID..".txt")
 		local JSON = util.JSONToTable(fileopen)
 		local frameedit = vgui.Create("DFrame")
 		frameedit:SetSkin("ServerBase")
@@ -111,7 +111,7 @@ local function EditSuspension(steamid, name)
 		bantypes:SetPos(400, 40)
 		bantypes:SetSize(50, 20)
 		
-		local banfile = file.Read("seasbans/"..ID..".txt")
+		local banfile = file.Read("sbbans/"..ID..".txt")
 		local JSON = util.JSONToTable(banfile)
 		
 		local changesus = vgui.Create("DButton", frameedit)
@@ -219,7 +219,7 @@ concommand.Add("sb_suspensions", function(ply, cmd, args)
 	end
 	adminmenu.DoClick = function()
 		frame:Close()
-		LocalPlayer():ConCommand("admin")
+		LocalPlayer():ConCommand("sb_admin")
 	end
 	
 	local banpanel = vgui.Create("DListView", frame)
