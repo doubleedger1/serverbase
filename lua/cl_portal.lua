@@ -5,6 +5,10 @@ Servers = {
 }
 
 concommand.Add("sb_portal", function(ply, cmd, args)
+	if ( !PORTAL_ENABLED ) then
+		ply:ChatPrint("[SERVERBASE] The server portal feature has been disabled!")
+		return 
+	end
 	local portalframe = vgui.Create("DFrame")
 	portalframe:SetSize(500, 500)
 	portalframe:SetPos(ScrW() / 4, ScrH() / 4)

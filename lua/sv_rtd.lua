@@ -68,7 +68,7 @@ RTD_OUTCOME[6] = {
 }
 
 RTD_OUTCOME[7] = {
-	name = "jumppos",
+	name = "jumpneg",
 	func = function(ply)
 		local before = ply:GetJumpPower()
 		ply:SetJumpPower(150)
@@ -87,6 +87,39 @@ RTD_OUTCOME[8] = {
 		PrintMessage(HUD_PRINTTALK, ply:Nick().. " has been set on fire for " ..duration.. " seconds!")
 	end
 }
+
+RTD_OUTCOME[9] = {	
+	name = "heavyboots",
+	func = function(ply)
+		ply.HeavyBoots = true
+		ply.PreviousJumpPower = ply:GetJumpPower()
+		ply:SetJumpPower(0)
+		PrintMessage(HUD_PRINTTALK, ply:Nick().. " has been given heavy boots by the dice!")
+		ply:ChatPrint("You'll be able to jump after you have died!")
+	end
+}
+
+RTD_OUTCOME[10] = {
+	name = "regeneration",
+	func = function(ply)
+		PrintMessage(HUD_PRINTTALK, ply:Nick().. " has been given temporary health regeration by the dice!")
+		timer.Create(ply:Nick(), 1, math.random(5,20), function()
+			if ( ply:Health() + 1 > 100 ) then
+				ply:SetHealth(100)
+			else
+				ply:SetHealth(ply:Health() + 1)
+			end
+		end)
+	end
+}
+
+hook.Add("PlayerSpawn", "SpawnCheck", function(ply)
+	if ( ply.HeavyBoots == true ) then
+		ply.HeavyBoots = false
+		ply:SetJumpPower(ply.PreviousJumpPower)
+		ply:ChatPrint("You can now jump again!")
+	end
+end)
 
 function RollTheDice(ply)
 	if ( !ply:Alive() ) then
@@ -111,10 +144,16 @@ function RollTheDice(ply)
 	
 	ply.rtdcooldown = CurTime() + 120
 end
+
 hook.Add("PlayerSay", "PlayerRollTheDice", function(ply, text, args)
 	newtext = string.lower(text)
 	if ( string.sub(newtext, 1, 4) == "/rtd" or string.sub(newtext, 1, 4) == "!rtd" ) then
-		RollTheDice(ply)
-		return ""
+		if ( RTD_ENABLED ) then
+			RollTheDice(ply)
+			return ""
+		else
+			ply:ChatPrint("[SERVERBASE] The RTD feature has been disabled!")
+			return ""
+		end
 	end
 end)

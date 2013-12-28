@@ -1,19 +1,3 @@
-------------------- 
--- Configuration --
--------------------
-ChatAdTime = 180 --This will print a helpful message every number of seconds.
- 
-ChatAdEnabled = true --Set this to false if you don't want ChatMessages printed every ChatAdTime seconds.
-
-ChatMessages = {}
-ChatMessages[1] = "Report a rulebreaking player on our website at www.mywebsite.com"
-ChatMessages[2] = "This server is running ServerBase!"
-ChatMessages[3] = "Press F1 for more information about the server or gamemode"
---Add messages by putting ChatMessages[#ascending#] = "message as a string"
---------------------------
--- End of Configuration --
---------------------------
-
 util.AddNetworkString("sendbans")
 util.AddNetworkString("addban") 
 util.AddNetworkString("removesuspension")
@@ -22,10 +6,22 @@ util.AddNetworkString("requestthebans")
 
 net.Receive("requestthebans", function()
 	local tbl = {}
-	local files = file.Find("sbbans/*.txt", "DATA")
-	for _, v in pairs (files) do
-		local bantbl = util.JSONToTable(file.Read("sbbans/" .. v, "DATA"))
+	local bans = file.Find("sbbans/bans/*.txt", "DATA")
+	for _, v in pairs (bans) do
+		local bantbl = util.JSONToTable(file.Read("sbbans/bans/" .. v, "DATA"))
 		table.insert(tbl, bantbl)
+	end
+	
+	local mutes = file.Find("sbbans/mutes/*.txt", "DATA")
+	for _, v in pairs (mutes) do
+		local mutetbl = util.JSONToTable(file.Read("sbbans/mutes/" .. v, "DATA"))
+		table.insert(tbl, mutetbl)
+	end
+	
+	local voicemutes = file.Find("sbbans/voicemutes/*.txt", "DATA")
+	for _, v in pairs (voicemutes) do
+		local voicemutetbl = util.JSONToTable(file.Read("sbbans/voicemutes/" .. v, "DATA"))
+		table.insert(tbl, voicemutetbl)
 	end
 	
 	net.Start("sendbans")
@@ -36,6 +32,18 @@ end)
 hook.Add("PlayerInitialSpawn", "LoadThatStuff", function(ply)
 	if (!file.IsDir("sbbans", "DATA")) then
 		file.CreateDir("sbbans")
+	end
+	
+	if (!file.IsDir("sbbans/bans", "DATA")) then
+		file.CreateDir("sbbans/bans")
+	end
+	
+	if (!file.IsDir("sbbans/mutes", "DATA")) then
+		file.CreateDir("sbbans/mutes")
+	end
+	
+	if (!file.IsDir("sbbans/voicemutes", "DATA")) then
+		file.CreateDir("sbbans/voicemutes")
 	end
 	
 	local files  = file.Find("sbbans/*.txt", "DATA")
@@ -64,60 +72,58 @@ hook.Add("PlayerInitialSpawn", "CheckSuspension", function(ply)
 	ply.CanTalk = ply.CanTalk or true
 	ply.CanType = ply.CanType or true
 	local ID = string.Replace(ply:SteamID(), ":", "_")
-	if ( file.Exists("sbbans/"..ID..".txt", "DATA") ) then
-		local banfile = file.Read("sbbans/"..ID..".txt")
+	if ( file.Exists("sbbans/bans/"..ID..".txt", "DATA") ) then
+		local banfile = file.Read("sbbans/bans/"..ID..".txt")
 		local JSON = util.JSONToTable(banfile)
-		if ( JSON[6] == "BAN" ) then
-			if ( tonumber(JSON[3]) <= os.time() ) then
-				file.Delete("sbbans/"..ID..".txt")
-				ply:ChatPrint("Your ban has recently expired.")
+		if ( tonumber(JSON[3]) <= os.time() ) then
+			file.Delete("sbbans/bans/"..ID..".txt")
+			ply:ChatPrint("Your ban has recently expired.")
+			return
+		end
+		if ( tonumber(JSON[3]) > os.time() ) then
+			if ( tonumber(JSON[3]) >= 2303477600 ) then
+				ply:Kick("You are banned: " ..tostring(JSON[4]).. " (Expires: Never.)")
 				return
 			end
-			if ( tonumber(JSON[3]) > os.time() ) then
-				if ( tonumber(JSON[3]) >= 2303477600 ) then
-					ply:Kick("You are banned: " ..tostring(JSON[4]).. " (Expires: Never.)")
-					return
-				end
-			ply:Kick("You are banned: " ..JSON[4].. " (It expires: In " ..string.ConvertTimeStamp(JSON[3] - os.time()).. ")")
-			end
+		ply:Kick("You are banned: " ..JSON[4].. " (It expires: In " ..string.ConvertTimeStamp(JSON[3] - os.time()).. ")")
 		end
-	end 
+	end
+	
+	if ( file.Exists("sbbans/voicemutes/"..ID..".txt", "DATA") ) then
+		local voicemutefile = file.Read("sbbans/voicemutes/"..ID..".txt")
+		local JSONVM = util.JSONToTable(banfile)
+		if ( tonumber(JSONVM[3]) <= os.time() ) then
+			file.Delete("sbbans/voicemutes/"..ID..".txt")
+			ply:ChatPrint("Your voicemute has recently expired")
+		else
+			ply.Cantalk = false
+			ply:ChatPrint("You are voicemuted. Reason: " ..JSONVM[4])
+		end
+	end
+	
+	if ( file.Exists("sbbans/mutes/"..ID..".txt", "DATA") ) then
+		local mutefile = file.Read("sbbans/mutes/"..ID..".txt")
+		local JSONM = util.JSONToTable(mutefile)
+		if ( tonumber(JSONM[3]) <= os.time() ) then
+			file.Delete("ssbans/mutes/"..ID..".txt")
+			ply:ChatPrint("Your mute has recently expired")
+		else
+			ply.CanType = false
+			ply:ChatPrint("You are muted. Reason: " ..JSONM[4])
+		end
+	end
 end)
 	
 hook.Add("PlayerSay", "CheckIfPlayerCanType", function(ply, text, public)
-	
-	local ID = string.Replace(ply:SteamID(), ":", "_")
-	if ( file.Exists("sbbans/"..ID..".txt", "DATA") ) then
-		local banfile = file.Read("sbbans/"..ID..".txt")
-		local JSON = util.JSONToTable(banfile)
-		if ( JSON[6] == "MUTE" ) then
-			if ( tonumber(JSON[3]) <= os.time() ) then
-				file.Delete("sbbans/"..ID..".txt")
-				ply:ChatPrint("Your mute has recently expired.")
-			else
-				ply:ChatPrint("You are muted.")
-				return ""
-			end
-		end
+	if ( ply.CanType == false ) then
+		ply:ChatPrint("You cannot talk, you are muted.")
+		return ""
 	end
 end)
 
 hook.Add("PlayerCanHearPlayersVoice", "PreventVoiceMute", function(listen, talk)
-	local ID = string.Replace(talk:SteamID(), ":", "_")
-	if ( file.Exists("sbbans/"..ID..".txt", "DATA") ) then
-	local banfile = file.Read("sbbans/"..ID..".txt")
-	local JSON = util.JSONToTable(banfile)
-		if ( JSON[6] == "VOICEMUTE" ) then
-			if ( tonumber(JSON[3]) <= os.time() ) then
-				file.Delete("sbbans/"..ID..".txt")
-				talk:ChatPrint("Your voicemute has recently expired")
-				return true, true
-			else
-				talk.Cantalk = false
-				return false, false
-			end
-		end
-		return true, true
+	if ( talk.CanTalk == false ) then
+		return false, false
 	end
 end)
 	
@@ -137,7 +143,7 @@ concommand.Add("sb_ban", function(ply, cmd, args)
 			local steamid2 = string.Replace(v:SteamID(), ":", "_")
 			local bantable = {v:Nick(), v:SteamID(), tostring(os.time() + duration), reason, ply:Nick(), "BAN"}
 			local jstring = util.TableToJSON(bantable)
-			file.Write("sbbans/" ..steamid2..".txt", jstring)
+			file.Write("sbbans/bans/" ..steamid2..".txt", jstring)
 			v:Kick("You have been banned: " ..reason)
 			PrintMessage( HUD_PRINTTALK, "[ServerBase] Admin " ..ply:Nick().. " has banned " ..v:Nick().. " with reason: " ..reason)
 		end
@@ -186,7 +192,7 @@ concommand.Add("sb_mute", function(ply, cmd, args)
 			local steamid2 = string.Replace(v:SteamID(), ":", "_")
 			local bantable = {v:Nick(), v:SteamID(), tostring(os.time() + duration), reason, ply:Nick(), "MUTE"}
 			local jstring = util.TableToJSON(bantable)
-			file.Write("sbbans/" ..steamid2..".txt", jstring)
+			file.Write("sbbans/mutes/" ..steamid2..".txt", jstring)
 			v.CanType = false
 			PrintMessage( HUD_PRINTTALK, "[ServerBase] Admin " ..ply:Nick().. " has muted " ..v:Nick().. " with reason: " ..reason)
 		end
@@ -205,7 +211,7 @@ concommand.Add("sb_voicemute", function(ply, cmd, args)
 			local steamid2 = string.Replace(v:SteamID(), ":", "_")
 			local bantable = {v:Nick(), v:SteamID(), tostring(os.time() + duration), reason, ply:Nick(), "VOICEMUTE"}
 			local jstring = util.TableToJSON(bantable)
-			file.Write("sbbans/" ..steamid2..".txt", jstring)
+			file.Write("sbbans/voicemutes/" ..steamid2..".txt", jstring)
 		v.CanTalk = false
 		PrintMessage( HUD_PRINTTALK, "[ServerBase] Admin " ..ply:Nick().. " has voicemuted " ..v:Nick().. " with reason: " ..reason)
 		end
@@ -247,8 +253,21 @@ end)
 -- This removes the suspensions.
 net.Receive("removesuspension", function()
 	local steamid2 = string.Replace(net.ReadString(), ":", "_")
-	if ( file.Exists("sbbans/" ..steamid2..".txt", "DATA") ) then
-		file.Delete("sbbans/" ..steamid2..".txt")
+	local typee = net.ReadString()
+	if ( typee == "BAN" ) then
+		if ( file.Exists("sbbans/bans/" ..steamid2..".txt", "DATA") ) then
+			file.Delete("sbbans/bans/" ..steamid2..".txt")
+		end
+	elseif ( typee == "MUTE" ) then
+		if ( file.Exists("sbbans/mutes/" ..steamid2..".txt", "DATA") ) then
+			file.Delete("sbbans/mutes/" ..steamid2..".txt")
+		end
+	elseif ( typee == "VOICEMUTE" ) then
+		if ( file.Exists("sbbans/voicemutes/" ..steamid2..".txt", "DATA") ) then
+			file.Delete("sbbans/voicemutes/" ..steamid2..".txt")
+		end
+	else
+		print("something went wrong")
 	end
 end)
 
@@ -264,8 +283,16 @@ end)
 net.Receive("addban", function()
 	local tbl = util.TableToJSON(net.ReadTable())
 	local steamid = net.ReadString()
+	local typecheck = net.ReadString()
 	local val = string.Replace(steamid, ":", "_")
-	file.Write("sbbans/"..val..".txt", tbl)
+	
+	if ( typecheck == "BAN" ) then
+		file.Write("sbbans/bans/"..val..".txt", tbl)
+	elseif ( typecheck == "MUTE" ) then
+		file.Write("sbbans/mutes/"..val..".txt", tbl)
+	elseif ( typecheck == "VOICEMUTE" ) then
+		file.Write("sbbans/voicemutes/"..val..".txt", tbl)
+	end
 end)
 
 function DisableNoclip( objPl )

@@ -1,12 +1,10 @@
 local SKIN = {}
- 
 function SKIN:PaintFrame(panel, w, h)
 		
 		draw.RoundedBox(-1, 0, 0, w, h, Color(0, 0, 0, 200))
 		panel:SetTitle("")
 		surface.SetDrawColor(Color(0, 0, 0, 200))
 		draw.RoundedBox(-1, 0, 0, w, 25, Color(0, 75, 75, 255 ))
-		surface.DrawOutlinedRect(0, 0, w, h)
 end
 	
 function SKIN:PaintPanel(panel, w, h)
@@ -44,6 +42,12 @@ function SKIN:PaintPropertySheet(panel, w, h)
 	draw.RoundedBox(-1, 0, 0, w, h, Color(0, 0, 0, 200))
 end
 
+function SKIN:PaintToolTip(panel, w, h)
+
+	panel:SetTextColor(Color(255, 255, 255, 255))
+	return draw.RoundedBox(-1, 0, 0, w, h, Color(0, 0, 0, 200))
+end
+
 function SKIN:PaintButton(panel, w, h)
 	
 	panel:SetTextColor(Color(255, 255, 255, 255))
@@ -71,5 +75,5 @@ end
 function SKIN:PaintWindowMaximizeButton(panel)
 	return false
 end
-	
+
 derma.DefineSkin("ServerBase", "Admin derma by Doubleedge.", SKIN, "Default")
