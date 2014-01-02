@@ -1,9 +1,3 @@
-Servers = { 
-	{"PlaceHolder", "37.187.77.51:27015", "This is the Minigames server"},
-	{"PlaceHolder2", "37.187.77.51:27016", "This is the Zombie Survival server"},
-	{"PlaceHolder3", "37.187.77.51:27017", "This is the Retro Team Play server"},
-}
-
 concommand.Add("sb_portal", function(ply, cmd, args)
 	if ( !PORTAL_ENABLED ) then
 		ply:ChatPrint("[SERVERBASE] The server portal feature has been disabled!")

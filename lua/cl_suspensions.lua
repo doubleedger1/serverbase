@@ -23,12 +23,13 @@ end)
 
 
 	
-local function EditSuspension(steamid, name)
+local function EditSuspension(steamid, name, suspension)
 	if ( !LocalPlayer():IsAdmin() ) then return end
 	local ID = string.Replace(steamid, ":", "_")
 	local Nick = name
-	if ( file.Exists("sbbans/"..ID..".txt", "DATA") ) then
-		local fileopen = file.Read("sbbans/"..ID..".txt")
+	local bantypee = string.lower(suspension)
+	if ( file.Exists("sbbans/"..bantypee.."s/"..ID..".txt", "DATA") ) then
+		local fileopen = file.Read("sbbans/"..bantypee.."s/"..ID..".txt")
 		local JSON = util.JSONToTable(fileopen)
 		local frameedit = vgui.Create("DFrame")
 		frameedit:SetSkin("ServerBase")
@@ -112,7 +113,6 @@ local function EditSuspension(steamid, name)
 		bantypes:SetSize(50, 20)
 		
 		local banfile = file.Read("sbbans/"..ID..".txt")
-		local JSON = util.JSONToTable(banfile)
 		
 		local changesus = vgui.Create("DButton", frameedit)
 		changesus:SetSize(100, 20)
@@ -126,6 +126,7 @@ local function EditSuspension(steamid, name)
 			local finaltable = {JSON[1], JSON[2], JSON[3], JSON[4], JSON[5], JSON[6]}
 			net.Start("modifysuspension")
 				net.WriteTable(JSON)
+				net.WriteString(suspension)
 				net.WriteString(ID)
 			net.SendToServer()
 			frameedit:Close()	
@@ -235,7 +236,7 @@ concommand.Add("sb_suspensions", function(ply, cmd, args)
 	banpanel.OnClickLine = function(panel, line, selected)
 			local ModifyMenu = DermaMenu()
 			ModifyMenu:SetPos(gui.MousePos())
-			ModifyMenu:AddOption("Edit Suspension", function() EditSuspension(line:GetValue(2), line:GetValue(1)) frame:Close() end):SetImage("icon16/user_edit.png")
+			ModifyMenu:AddOption("Edit Suspension", function() EditSuspension(line:GetValue(2), line:GetValue(1), line:GetValue(6)) frame:Close() end):SetImage("icon16/user_edit.png")
 			ModifyMenu:AddOption("Remove Suspension", function() line:Remove() 
 				net.Start("removesuspension")
 					net.WriteString(line:GetValue(2))

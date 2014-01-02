@@ -114,7 +114,7 @@ hook.Add("PlayerInitialSpawn", "CheckSuspension", function(ply)
 	end
 end)
 	
-hook.Add("PlayerSay", "CheckIfPlayerCanType", function(ply, text, public)
+hook.Add("PlayerSay", "CheckIfPlayerCanTypePlusLog", function(ply, text, public)
 	if ( ply.CanType == false ) then
 		ply:ChatPrint("You cannot talk, you are muted.")
 		return ""
@@ -146,6 +146,7 @@ concommand.Add("sb_ban", function(ply, cmd, args)
 			file.Write("sbbans/bans/" ..steamid2..".txt", jstring)
 			v:Kick("You have been banned: " ..reason)
 			PrintMessage( HUD_PRINTTALK, "[ServerBase] Admin " ..ply:Nick().. " has banned " ..v:Nick().. " with reason: " ..reason)
+			SBLOG("[ADMIN CMD] - Admin " ..ply:Nick() .. " has BANNED " ..v:Nick().. " with reason: " ..reason)
 		end
 	end
 end)
@@ -160,6 +161,7 @@ concommand.Add("sb_kick", function(ply, cmd, args)
 		if ( v:UserID() == ID ) then
 			v:Kick(reason)
 			PrintMessage( HUD_PRINTTALK, "[ServerBase] Admin " ..ply:Nick().. " has kicked " ..v:Nick().. " with reason: " ..reason)
+			SBLOG("[ADMIN CMD] - Admin " ..ply:Nick() .. " has KICKED " ..v:Nick().. " with reason: " ..reason)
 		end
 	end
 end)
@@ -173,6 +175,7 @@ concommand.Add("sb_slay", function(ply, cmd ,args)
 		if ( v:UserID() == ID ) then
 			v:Kill()
 			PrintMessage( HUD_PRINTTALK, "[ServerBase] Admin " ..ply:Nick().. " has slain " ..v:Nick())
+			SBLOG("[ADMIN CMD] - Admin " ..ply:Nick() .. " has SLAIN " ..v:Nick())
 		end
 	end
 end)
@@ -195,6 +198,7 @@ concommand.Add("sb_mute", function(ply, cmd, args)
 			file.Write("sbbans/mutes/" ..steamid2..".txt", jstring)
 			v.CanType = false
 			PrintMessage( HUD_PRINTTALK, "[ServerBase] Admin " ..ply:Nick().. " has muted " ..v:Nick().. " with reason: " ..reason)
+			SBLOG("[ADMIN CMD] - Admin " ..ply:Nick() .. " has MUTED " ..v:Nick().. " with reason: " ..reason)
 		end
 	end
 end)
@@ -214,6 +218,7 @@ concommand.Add("sb_voicemute", function(ply, cmd, args)
 			file.Write("sbbans/voicemutes/" ..steamid2..".txt", jstring)
 		v.CanTalk = false
 		PrintMessage( HUD_PRINTTALK, "[ServerBase] Admin " ..ply:Nick().. " has voicemuted " ..v:Nick().. " with reason: " ..reason)
+		SBLOG("[ADMIN CMD] - Admin " ..ply:Nick() .. " has VOICE MUTED " ..v:Nick().. " with reason: " ..reason)
 		end
 	end
 end)
@@ -226,7 +231,8 @@ concommand.Add("sb_teleporttome", function(ply, cmd, args)
 	for k ,v in pairs( player.GetAll()) do
 		if ( v:UserID() == ID ) then
 			v:SetPos(ply:GetPos() + Vector(0, 50, 10))
-			PrintMessage( HUD_PRINTTALK, "[ServerBase] Admin " ..ply:Nick().. " teleported " ..v:Nick().. " to his position")
+			PrintMessage( HUD_PRINTTALK, "[ServerBase] Admin " ..ply:Nick().. " teleported " ..v:Nick().. " to their position")
+			SBLOG("[ADMIN CMD] - Admin " ..ply:Nick() .. " has TELEPORTED " ..v:Nick().. " TO HIS POSITION")
 		end
 	end
 end)
@@ -240,13 +246,16 @@ concommand.Add("sb_teleporttothem", function(ply, cmd, args)
 		if ( v:UserID() == ID ) then
 			ply:SetPos(v:GetPos() + Vector(0, 50, 10))
 			PrintMessage( HUD_PRINTTALK, "[ServerBase] Admin " ..ply:Nick().. " teleported to " ..v:Nick().."'s position")
+			SBLOG("[ADMIN CMD] - Admin " ..ply:Nick() .. " has TELEPORTED " ..v:Nick().."'s POSITION")
 		end
 	end
 end)
 
 timer.Create("adsystem", ChatAdTime, 0, function()
 	if ( ChatAdEnabled == true ) then
-		PrintMessage( HUD_PRINTTALK, "[INFO] " ..table.Random(ChatMessages) )
+		local chatmsg = table.Random(ChatMessages)
+		PrintMessage( HUD_PRINTTALK, "[INFO] " ..chatmsg )
+		SBLOG("[SERVER AD] " ..chatmsg)
 	end
 end)
 
@@ -274,9 +283,10 @@ end)
 -- This modifies the suspensions.
 net.Receive("modifysuspension", function()
 	local value = net.ReadTable()
+	local typecheck = net.ReadString()
 	local json = util.TableToJSON(value)
 	local ply = net.ReadString()
-	file.Write("sbbans/"..ply..".txt", json)
+	file.Write("sbbans/"..string.lower(typecheck).."s/"..ply..".txt", json)
 end)
 
 -- This adds suspensions.
@@ -300,8 +310,10 @@ function DisableNoclip( objPl )
 		local noclip = objPl:GetMoveType() == MOVETYPE_NOCLIP
 		if ( noclip ) then
 			PrintMessage( HUD_PRINTTALK, "[ServerBase] Admin " ..objPl:Nick().. " has disabled noclip")
+			SBLOG("[ADMIN CMD - LOG] - Admin " ..objPl:Nick().. " has disabled noclip ")
 		else 
 			PrintMessage( HUD_PRINTTALK, "[ServerBase] Admin " ..objPl:Nick().. " has enabled noclip")
+			SBLOG("[ADMIN CMD - LOG] - Admin " ..objPl:Nick().. " has enabled noclip ")
 		end
 	end
 	return objPl:IsAdmin()
