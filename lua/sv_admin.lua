@@ -68,10 +68,30 @@ hook.Add("PlayerInitialSpawn", "LoadThatStuff", function(ply)
 
 end)
 
+hook.Add("CheckPassword", "CheckBans", function(steamid, ip, serverPass, enteredPass, name)
+        local ID64 = util.SteamIDFrom64(steamid)
+        local ID = string.Replace(ID64, ":", "_")
+        if ( file.Exists("sbbans/bans/"..ID..".txt", "DATA") ) then
+                local banfile = file.Read("sbbans/bans/"..ID..".txt")
+                local JSON = util.JSONToTable(banfile)
+                if ( tonumber(JSON[3]) <= os.time() ) then
+                        file.Delete("sbbans/bans/"..ID..".txt")
+                        return
+                end
+                if ( tonumber(JSON[3]) > os.time() ) then
+                        if ( tonumber(JSON[3]) >= 2303477600 ) then
+                                return false, "You are banned: " ..tostring(JSON[4]).. " (Expires: Never.)"
+                        end
+                        return false, "You are banned: " ..JSON[4].. " (It expires: In " ..string.ConvertTimeStamp(JSON[3] - os.time()).. ")"
+                end
+        end
+        return true
+end)
+
 hook.Add("PlayerInitialSpawn", "CheckSuspension", function(ply)
 	ply.CanTalk = ply.CanTalk or true
 	ply.CanType = ply.CanType or true
-	local ID = string.Replace(ply:SteamID(), ":", "_")
+/*	local ID = string.Replace(ply:SteamID(), ":", "_")
 	if ( file.Exists("sbbans/bans/"..ID..".txt", "DATA") ) then
 		local banfile = file.Read("sbbans/bans/"..ID..".txt")
 		local JSON = util.JSONToTable(banfile)
@@ -87,7 +107,7 @@ hook.Add("PlayerInitialSpawn", "CheckSuspension", function(ply)
 			end
 		ply:Kick("You are banned: " ..JSON[4].. " (It expires: In " ..string.ConvertTimeStamp(JSON[3] - os.time()).. ")")
 		end
-	end
+	end*/
 	
 	if ( file.Exists("sbbans/voicemutes/"..ID..".txt", "DATA") ) then
 		local voicemutefile = file.Read("sbbans/voicemutes/"..ID..".txt")
