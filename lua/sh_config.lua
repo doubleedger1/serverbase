@@ -10,6 +10,14 @@ ADMIN_ENABLED = true -- Set this to false if you don't wish to use the admin sys
 
 RULES_ENABLED = true -- Set this to false if you don't wish to use the rules feature.
 
+-- The colors for the messages that pop up when an admin does an action or when a server ad pops up.
+COLOR_TAG = Color(0, 74, 74) --Default: tale
+COLOR_TEXT = Color(255, 255, 255) --Default: white
+COLOR_ADMIN = Color(0, 255, 0) --Default: green
+COLOR_TARGET = Color(255, 0, 0) --Default: red
+COLOR_REASON = Color(0, 0, 0) ---Default: black
+
+
 ChatAdTime = 180 --This will print a helpful message every number of seconds.
  
 ChatAdEnabled = true --Set this to false if you don't want ChatMessages printed every ChatAdTime seconds.

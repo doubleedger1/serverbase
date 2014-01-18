@@ -85,7 +85,6 @@ hook.Add("CheckPassword", "CheckBans", function(steamid, ip, serverPass, entered
                         return false, "You are banned: " ..JSON[4].. " (It expires: In " ..string.ConvertTimeStamp(JSON[3] - os.time()).. ")"
                 end
         end
-        return true
 end)
 
 hook.Add("PlayerInitialSpawn", "CheckSuspension", function(ply)
@@ -150,7 +149,7 @@ end)
 concommand.Add("sb_ban", function(ply, cmd, args)
 	if ( !ply:IsAdmin() ) then return end
 	
-	local ID = tonumber(args[1])
+	local target = TargetUserID(args[1]) --don't need to worry about turning it to a number, the function does that for us
 	local duration = tonumber(args[2] * 60)
 	local reason = tostring(args[3]) or "No reason specified"
 	
@@ -158,59 +157,78 @@ concommand.Add("sb_ban", function(ply, cmd, args)
 		duration = 2303477600
 	end
 		
-	for k, v in pairs (player.GetAll()) do
+	/*for k, v in pairs (player.GetAll()) do
 		if ( v:UserID() == ID ) then
 			local steamid2 = string.Replace(v:SteamID(), ":", "_")
 			local bantable = {v:Nick(), v:SteamID(), tostring(os.time() + duration), reason, ply:Nick(), "BAN"}
 			local jstring = util.TableToJSON(bantable)
 			file.Write("sbbans/bans/" ..steamid2..".txt", jstring)
 			v:Kick("You have been banned: " ..reason)
-			PrintMessage( HUD_PRINTTALK, "[ServerBase] Admin " ..ply:Nick().. " has banned " ..v:Nick().. " with reason: " ..reason)
+			--PrintMessage( HUD_PRINTTALK, "[ServerBase] Admin " ..ply:Nick().. " has banned " ..v:Nick().. " with reason: " ..reason)
 			SBLOG("[ADMIN CMD] - Admin " ..ply:Nick() .. " has BANNED " ..v:Nick().. " with reason: " ..reason)
 		end
+	end*/
+	if IsValid(target) then
+		local steamid2 = string.Replace(target:SteamID(), ":", "_")
+		local bantable = {target:Nick(), target:SteamID(), tostring(os.time() + duration), reason, ply:Nick(), "BAN"}
+		local jstring = util.TableToJSON(bantable)
+		file.Write("sbbans/bans/" ..steamid2..".txt", jstring)
+		target:Kick("You have been banned: " ..reason)
+		SBLOG("[ADMIN CMD] - Admin " ..ply:Nick() .. " has BANNED " ..target:Nick().. " with reason: " ..reason)
+		for k,v in pairs (player.GetAll()) do
+			chat.AddText(v, COLOR_TAG, "[ServerBase] ", COLOR_TEXT, "Admin ", COLOR_ADMIN, ply:Nick(), COLOR_TEXT, " has banned ", COLOR_TARGET, target:Nick(), COLOR_TEXT, " with reason: ", COLOR_REASON, reason)
+		end
 	end
+
 end)
 	
 concommand.Add("sb_kick", function(ply, cmd, args)
 	if ( !ply:IsAdmin() ) then return end
 	
-	local ID = tonumber(args[1])
+	local target = TargetUserID(args[1])
 	local reason = tostring(args[2]) or "No reason specified"
 		
-	for k, v in pairs (player.GetAll()) do
+	/*for k, v in pairs (player.GetAll()) do
 		if ( v:UserID() == ID ) then
 			v:Kick(reason)
 			PrintMessage( HUD_PRINTTALK, "[ServerBase] Admin " ..ply:Nick().. " has kicked " ..v:Nick().. " with reason: " ..reason)
 			SBLOG("[ADMIN CMD] - Admin " ..ply:Nick() .. " has KICKED " ..v:Nick().. " with reason: " ..reason)
 		end
+	end*/
+	if IsValid(target) then
+		target:Kick(reason)
+		for k,v in pairs(player.GetAll()) do
+			chat.AddText(v, COLOR_TAG, "[ServerBase] ", COLOR_TEXT, "Admin ", COLOR_ADMIN, ply:Nick(), COLOR_TEXT, " has kicked ", COLOR_TARGET, target:Nick(), COLOR_TEXT, " with reason: ", COLOR_REASON, reason)
+		end
+		SBLOG("[ADMIN CMD] - Admin " ..ply:Nick() .. " has KICKED " ..v:Nick().. " with reason: " ..reason)
 	end
 end)
 	
-concommand.Add("sb_slay", function(ply, cmd ,args)
+concommand.Add("sb_slay", function(ply, cmd, args)
 	if ( !ply:IsAdmin() ) then return end
 	
-	local ID = tonumber(args[1])
+	local target = TargetUserID(args[1])
 	
-	for k, v in pairs (player.GetAll()) do
-		if ( v:UserID() == ID ) then
-			v:Kill()
-			PrintMessage( HUD_PRINTTALK, "[ServerBase] Admin " ..ply:Nick().. " has slain " ..v:Nick())
-			SBLOG("[ADMIN CMD] - Admin " ..ply:Nick() .. " has SLAIN " ..v:Nick())
+	if IsValid(target) then
+		target:Kill()
+		for k,v in pairs(player.GetAll()) do
+			chat.AddText(v, COLOR_TAG, "[ServerBase] ", COLOR_TEXT, "Admin ", COLOR_ADMIN, ply:Nick(), COLOR_TEXT, " has slain ", COLOR_TARGET, target:Nick())
 		end
+		SBLOG("[ADMIN CMD] - Admin " ..ply:Nick() .. " has SLAIN " ..v:Nick().. " with reason: " ..reason)
 	end
 end)
 	
 concommand.Add("sb_mute", function(ply, cmd, args)
 	if ( !ply:IsAdmin() ) then return end
 	
-	local ID = tonumber(args[1])
+	local target = TargetUserID(args[1])
 	local duration = tonumber(args[2] * 60)
 	local reason = tostring(args[3]) or "No reason specified"
 	if ( duration == 0 ) then
 		duration = 2303477600
 	end
 		
-	for k, v in pairs (player.GetAll()) do
+	/*for k, v in pairs (player.GetAll()) do
 		if ( v:UserID() == ID ) then
 			local steamid2 = string.Replace(v:SteamID(), ":", "_")
 			local bantable = {v:Nick(), v:SteamID(), tostring(os.time() + duration), reason, ply:Nick(), "MUTE"}
@@ -220,17 +238,28 @@ concommand.Add("sb_mute", function(ply, cmd, args)
 			PrintMessage( HUD_PRINTTALK, "[ServerBase] Admin " ..ply:Nick().. " has muted " ..v:Nick().. " with reason: " ..reason)
 			SBLOG("[ADMIN CMD] - Admin " ..ply:Nick() .. " has MUTED " ..v:Nick().. " with reason: " ..reason)
 		end
+	end*/
+	if IsValid(target) then
+		local steamid2 = string.Replace(target:SteamID(), ":", "_")
+		local bantable = {target:Nick(), target:SteamID(), tostring(os.time() + duration), reason, ply:Nick(), "MUTE"}
+		local jstring = util.TableToJSON(bantable)
+		file.Write("sbbans/mutes/" ..steamid2..".txt", jstring)
+		target.CanType = false
+		for k,v in pairs(player.GetAll()) do
+			chat.AddText(v, COLOR_TAG, "[ServerBase] ", COLOR_TEXT, "Admin ", COLOR_ADMIN, ply:Nick(), COLOR_TEXT, " has muted ", COLOR_TARGET, target:Nick(), COLOR_TEXT, " with reason: ", COLOR_REASON, reason)
+		end
+		SBLOG("[ADMIN CMD] - Admin " ..ply:Nick() .. " has MUTED " ..target:Nick().. " with reason: " ..reason)
 	end
 end)
 	
 concommand.Add("sb_voicemute", function(ply, cmd, args)
 	if ( !ply:IsAdmin() ) then return end
 	
-	local ID = tonumber(args[1])
+	local target = TargetUserID(args[1])
 	local duration = tonumber(args[2] * 60)
 	local reason = args[3] or "No reason specified"
 		
-	for k, v in pairs (player.GetAll()) do
+	/*for k, v in pairs (player.GetAll()) do
 		if ( v:UserID() == ID ) then
 			local steamid2 = string.Replace(v:SteamID(), ":", "_")
 			local bantable = {v:Nick(), v:SteamID(), tostring(os.time() + duration), reason, ply:Nick(), "VOICEMUTE"}
@@ -240,41 +269,70 @@ concommand.Add("sb_voicemute", function(ply, cmd, args)
 		PrintMessage( HUD_PRINTTALK, "[ServerBase] Admin " ..ply:Nick().. " has voicemuted " ..v:Nick().. " with reason: " ..reason)
 		SBLOG("[ADMIN CMD] - Admin " ..ply:Nick() .. " has VOICE MUTED " ..v:Nick().. " with reason: " ..reason)
 		end
+	end*/
+	if IsValid(target) then
+		local steamid2 = string.Replace(target:SteamID(), ":", "_")
+		local bantable = {target:Nick(), target:SteamID(), tostring(os.time() + duration), reason, ply:Nick(), "VOICEMUTE"}
+		local jstring = util.TableToJSON(bantable)
+		file.Write("sbbans/voicemutes/" ..steamid2..".txt", jstring)
+		target.CanTalk = false
+		for k,v in pairs(player.GetAll()) do
+			chat.AddText(v, COLOR_TAG, "[ServerBase] ", COLOR_TEXT, "Admin ", COLOR_ADMIN, ply:Nick(), COLOR_TEXT, " has voice muted ", COLOR_TARGET, target:Nick(), COLOR_TEXT, " with reason: ", COLOR_REASON, reason)
+		end
+		SBLOG("[ADMIN CMD] - Admin " ..ply:Nick() .. " has VOICE MUTED " ..target:Nick().. " with reason: " ..reason)
 	end
 end)
 
 concommand.Add("sb_teleporttome", function(ply, cmd, args)
 	if ( !ply:IsAdmin() ) then return end
 	
-	local ID = tonumber(args[1])
+	local target = TargetUserID(args[1])
 	
-	for k ,v in pairs( player.GetAll()) do
+	/*for k ,v in pairs( player.GetAll()) do
 		if ( v:UserID() == ID ) then
 			v:SetPos(ply:GetPos() + Vector(0, 50, 10))
 			PrintMessage( HUD_PRINTTALK, "[ServerBase] Admin " ..ply:Nick().. " teleported " ..v:Nick().. " to their position")
 			SBLOG("[ADMIN CMD] - Admin " ..ply:Nick() .. " has TELEPORTED " ..v:Nick().. " TO HIS POSITION")
 		end
+	end*/
+
+	if IsValid(target) then
+		target:SetPos(ply:GetPos() + Vector(0, 50, 10))
+		for k,v in pairs(player.GetAll()) do
+			chat.AddText(v, COLOR_TAG, "[ServerBase] ", COLOR_TEXT, "Admin ", COLOR_ADMIN, ply:Nick(), COLOR_TEXT, " teleported ", COLOR_TARGET, target:Nick(), COLOR_TEXT, " to their position ")
+		end
+		SBLOG("[ADMIN CMD] - Admin " ..ply:Nick() .. " has TELEPORTED " ..target:Nick().. " TO HIS POSITION")
 	end
 end)
 	
 concommand.Add("sb_teleporttothem", function(ply, cmd, args)
 	if ( !ply:IsAdmin() ) then return end
 	
-	local ID = tonumber(args[1])
+	local target = TargetUserID(args[1])
 	
-	for k, v in pairs (player.GetAll()) do
+	/*for k, v in pairs (player.GetAll()) do
 		if ( v:UserID() == ID ) then
 			ply:SetPos(v:GetPos() + Vector(0, 50, 10))
 			PrintMessage( HUD_PRINTTALK, "[ServerBase] Admin " ..ply:Nick().. " teleported to " ..v:Nick().."'s position")
 			SBLOG("[ADMIN CMD] - Admin " ..ply:Nick() .. " has TELEPORTED " ..v:Nick().."'s POSITION")
 		end
+	end*/
+
+	if IsValid(target) then
+		ply:SetPos(target:GetPos() + Vector(0, 50, 10))
+		for k,v in pairs(player.GetAll()) do
+			chat.AddText(v, COLOR_TAG, "[ServerBase] ", COLOR_TEXT, "Admin ", COLOR_ADMIN, ply:Nick(), COLOR_TEXT, " teleported to ", COLOR_TARGET, target:Nick(), COLOR_TEXT, "'s position  ")
+		end
+		SBLOG("[ADMIN CMD] - Admin " ..ply:Nick() .. " has TELEPORTED " ..target:Nick().."'s POSITION")
 	end
 end)
 
 timer.Create("adsystem", ChatAdTime, 0, function()
 	if ( ChatAdEnabled == true ) then
 		local chatmsg = table.Random(ChatMessages)
-		PrintMessage( HUD_PRINTTALK, "[INFO] " ..chatmsg )
+		for k,v in pairs(player.GetAll()) do
+			chat.AddText(v, COLOR_TAG, "[INFO] ", COLOR_TEXT, chatmsg)
+		end
 		SBLOG("[SERVER AD] " ..chatmsg)
 	end
 end)
@@ -329,10 +387,14 @@ function DisableNoclip( objPl )
 	if ( objPl:IsAdmin() ) then
 		local noclip = objPl:GetMoveType() == MOVETYPE_NOCLIP
 		if ( noclip ) then
-			PrintMessage( HUD_PRINTTALK, "[ServerBase] Admin " ..objPl:Nick().. " has disabled noclip")
+			for k,v pairs(player.GetAll()) do
+				chat.AddText(v, COLOR_TAG, "[ServerBase] ", COLOR_TEXT, "Admin ", COLOR_ADMIN, objPl:Nick(), COLOR_TEXT, " has disabled noclip")
+			end
 			SBLOG("[ADMIN CMD - LOG] - Admin " ..objPl:Nick().. " has disabled noclip ")
 		else 
-			PrintMessage( HUD_PRINTTALK, "[ServerBase] Admin " ..objPl:Nick().. " has enabled noclip")
+			for k,v pairs(player.GetAll()) do
+				chat.AddText(v, COLOR_TAG, "[ServerBase] ", COLOR_TEXT, "Admin ", COLOR_ADMIN, objPl:Nick(), COLOR_TEXT, " has enabled noclip")
+			end
 			SBLOG("[ADMIN CMD - LOG] - Admin " ..objPl:Nick().. " has enabled noclip ")
 		end
 	end

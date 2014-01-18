@@ -18,7 +18,61 @@ function string.ConvertTimeStamp(seconds)
 	curtime = curtime .. ( ( hours < 10 ) and "0" or "" ) .. hours .. " Hr(s) "
 	curtime = curtime .. ( ( minutes < 10 ) and "0" or "" ) .. minutes .. " M(s) "
 	return tostring(curtime .. ( ( seconds < 10 and "0" or "" ) .. seconds .. " S(s)" ))
-end	
+end
+
+/*-------------------------------------------------------------------------------------------------------------------------
+	chat.AddText([ Player ply,] Colour colour, string text, Colour colour, string text, ... )
+	Returns: nil
+	In Object: None
+	Part of Library: chat
+	Available On: Server
+	Created By: Overv
+-------------------------------------------------------------------------------------------------------------------------*/
+if SERVER then
+	chat = { }
+	function chat.AddText( ... )
+		local arg = {...}
+		if ( type( arg[1] ) == "Player" ) then ply = arg[1] end
+		
+		umsg.Start( "AddText", ply )
+			umsg.Short( #arg )
+			for _, v in pairs( arg ) do
+				if ( type( v ) == "string" ) then
+					umsg.String( v )
+				elseif ( type ( v ) == "table" ) then
+					umsg.Short( v.r )
+					umsg.Short( v.g )
+					umsg.Short( v.b )
+					umsg.Short( v.a )
+				end
+			end
+		umsg.End( )
+	end
+else
+	usermessage.Hook( "AddText", function( um )
+		local argc = um:ReadShort( )
+		local args = { }
+		for i = 1, argc / 2, 1 do
+			table.insert( args, Color( um:ReadShort( ), um:ReadShort( ), um:ReadShort( ), um:ReadShort( ) ) )
+			table.insert( args, um:ReadString( ) )
+		end
+		
+		chat.AddText( unpack( args ) )
+	end )
+end
+
+-- Helper function to get the target from a UserID
+function TargetUserID(id)
+	local id = tonumber(id)
+
+	for k,v in pairs(player.GetAll()) do
+		if ( v:UserID == id ) then
+			return v
+		else
+			return false
+		end
+	end
+end
 
 local meta = FindMetaTable("Player")
 
