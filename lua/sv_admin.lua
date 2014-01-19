@@ -145,6 +145,16 @@ hook.Add("PlayerCanHearPlayersVoice", "PreventVoiceMute", function(listen, talk)
 		return false, false
 	end
 end)
+
+hook.Add("PlayerInitialSpawn", "LoadAdmins", function(ply)
+	if table.HasValue(SuperAdmins, ply:SteamID()) then
+		ply:SetUserGroup("superadmin")
+		chat.AddText(ply, COLOR_TAG, "[ServerBase] ", COLOR_TEXT, "Hello, ", COLOR_ADMIN, ply:Nick(), COLOR_TEXT, " you're in the superadmin group!")
+	elseif table.HasValue(Admins, ply:SteamID()) then
+		ply:SetUserGroup("admin")
+		chat.AddText(ply, COLOR_TAG, "[ServerBase] ", COLOR_TEXT, "Hello, ", COLOR_ADMIN, ply:Nick(), COLOR_TEXT, " you're in the admin group!")
+	end
+end)
 	
 concommand.Add("sb_ban", function(ply, cmd, args)
 	if ( !ply:IsAdmin() ) then return end

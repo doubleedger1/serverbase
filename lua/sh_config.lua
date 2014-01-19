@@ -29,7 +29,7 @@ ChatMessages[3] = "Press F1 for more information about the server or gamemode"
 ChatMessages[4] = "To access the server portal, type /servers or /portal"
 ChatMessages[5] = "To get the log for administration or reporting purposes, type /log"
 
---Add messages by putting ChatMessages[#ascending#] = "message as a string"
+-- Add messages by putting ChatMessages[#ascending#] = "message as a string"
 
 -- Please replace and add your own IPs, Server names and descriptions in place of my communities' servers.
 Servers = { 
@@ -38,6 +38,15 @@ Servers = {
 	{"PlaceHolder3", "37.187.77.51:27017", "This is the Retro Team Play server"}
 }
 
+--Add admins by their SteamID number here. Ex. STEAM_0:0:12345
+SuperAdmins = {
+	""
+}
+Admins = {
+	""
+}
+
+-- Add rules here.
 Rules = {}
 Rules[1] = "1) Don't spam the chatbox or the voicechat."
 Rules[2] = "2) Don't speedhack, wallhack, aimbot or hack in any way, shape or form."
