@@ -374,7 +374,8 @@ net.Receive("modifysuspension", function()
 	local typecheck = net.ReadString()
 	local json = util.TableToJSON(value)
 	local ply = net.ReadString()
-	file.Write("sbbans/"..string.lower(typecheck).."s/"..ply..".txt", json)
+	file.Delete("sbbans/"..string.lower(typecheck).."s/"..ply..".txt", "DATA")
+	file.Write("sbbans/"..value[6].."s/"..ply..".txt", json)
 end)
 
 -- This adds suspensions.
