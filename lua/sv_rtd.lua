@@ -147,7 +147,7 @@ end
 
 hook.Add("PlayerSay", "PlayerRollTheDice", function(ply, text, args)
 	newtext = string.lower(text)
-	if ( string.sub(newtext, 1, 4) == "/rtd" or string.sub(newtext, 1, 4) == "!rtd" ) then
+	if table.HasValue( RTDChatCommands, string.sub(newtext, 1, string.len(newtext))  ) then
 		if ( RTD_ENABLED ) then
 			RollTheDice(ply)
 			return ""

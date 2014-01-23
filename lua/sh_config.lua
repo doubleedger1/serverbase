@@ -1,7 +1,10 @@
---------------------------------------------------------
--- Configuration options below for your customization --
---------------------------------------------------------
+/*
+	Configuration options below for your customization
+*/
 
+----------------------------------------------------
+-- Enable/disable different features
+----------------------------------------------------
 RTD_ENABLED = true -- Set this to false if you don't wish to use the RTD feature.
 
 PORTAL_ENABLED = true -- Set this to false if you don't wish to use the server portal feature.
@@ -10,18 +13,25 @@ ADMIN_ENABLED = true -- Set this to false if you don't wish to use the admin sys
 
 RULES_ENABLED = true -- Set this to false if you don't wish to use the rules feature.
 
--- The colors for the messages that pop up when an admin does an action or when a server ad pops up.
+
+----------------------------------------------------
+-- Colors for colored messages (RGB format)
+----------------------------------------------------
 COLOR_TAG = Color(0, 74, 74) --Default: tale
 COLOR_TEXT = Color(255, 255, 255) --Default: white
 COLOR_ADMIN = Color(0, 255, 0) --Default: green
 COLOR_TARGET = Color(255, 0, 0) --Default: red
-COLOR_REASON = Color(0, 0, 0) ---Default: black
+COLOR_REASON = Color(0, 0, 0) --Default: black
 
 
+----------------------------------------------------
+-- Chat ad config options
+----------------------------------------------------
 ChatAdTime = 180 --This will print a helpful message every number of seconds.
  
 ChatAdEnabled = true --Set this to false if you don't want ChatMessages printed every ChatAdTime seconds.
 
+// Add messages by putting ChatMessages[#ascending#] = "message as a string"
 ChatMessages = {}
 ChatMessages[1] = "Report a rulebreaking player on our website at www.mywebsite.com"
 ChatMessages[2] = "This server is running ServerBase!"
@@ -29,24 +39,43 @@ ChatMessages[3] = "Press F1 for more information about the server or gamemode"
 ChatMessages[4] = "To access the server portal, type /servers or /portal"
 ChatMessages[5] = "To get the log for administration or reporting purposes, type /log"
 
--- Add messages by putting ChatMessages[#ascending#] = "message as a string"
 
--- Please replace and add your own IPs, Server names and descriptions in place of my communities' servers.
+----------------------------------------------------
+-- Server information for the portal
+----------------------------------------------------
+// Please replace and add your own IPs, Server names and descriptions in place of my communities' servers.
 Servers = { 
 	{"test", "37.187.77.51:27015", "This is the Minigames server"}, 
 	{"PlaceHolder2", "37.187.77.51:27016", "This is the Zombie Survival server"},
 	{"PlaceHolder3", "37.187.77.51:27017", "This is the Retro Team Play server"}
 }
 
---Add admins by their SteamID number here. Ex. STEAM_0:0:12345
+
+----------------------------------------------------
+-- Groups
+-- Add admins by their SteamID number here. Ex. STEAM_0:0:12345
+----------------------------------------------------
 SuperAdmins = {
-	""
+	"",
 }
 Admins = {
-	""
+	"",
 }
 
--- Add rules here.
+
+----------------------------------------------------
+-- Add your own RTD chat commands
+----------------------------------------------------
+RTDChatCommand = {
+	"/rtd",
+	"!rtd"
+}
+
+
+----------------------------------------------------
+-- Adding your own rules for the MOTD feature
+----------------------------------------------------
+// Add rules by putting Rules[#ascending#] = "message as a string"
 Rules = {}
 Rules[1] = "1) Don't spam the chatbox or the voicechat."
 Rules[2] = "2) Don't speedhack, wallhack, aimbot or hack in any way, shape or form."
