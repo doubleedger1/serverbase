@@ -90,8 +90,8 @@ end)
 hook.Add("PlayerInitialSpawn", "CheckSuspension", function(ply)
 	ply.CanTalk = ply.CanTalk or true
 	ply.CanType = ply.CanType or true
-/*	local ID = string.Replace(ply:SteamID(), ":", "_")
-	if ( file.Exists("sbbans/bans/"..ID..".txt", "DATA") ) then
+	local ID = string.Replace(ply:SteamID(), ":", "_")
+/*	if ( file.Exists("sbbans/bans/"..ID..".txt", "DATA") ) then
 		local banfile = file.Read("sbbans/bans/"..ID..".txt")
 		local JSON = util.JSONToTable(banfile)
 		if ( tonumber(JSON[3]) <= os.time() ) then
