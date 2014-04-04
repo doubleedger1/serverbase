@@ -25,7 +25,7 @@ hook.Add("PlayerSay", "ChatCommands", function(ply, text, public)
 	local trimText = string.Trim(lowerText)
 	local afterPrefix = string.sub(trimText, 2)
 
-	if prefix = "/" then
+	if prefix == "/" then
 		local args = string.Explode(" ", afterPrefix)
 		local command = args[1]
 		table.remove(args, 1)
