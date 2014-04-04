@@ -66,7 +66,7 @@ function TargetUserID(id)
 	local id = tonumber(id)
 
 	for k,v in pairs(player.GetAll()) do
-		if ( v:UserID == id ) then
+		if ( v:UserID() == id ) then
 			return v
 		else
 			return false

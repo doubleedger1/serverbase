@@ -224,7 +224,7 @@ concommand.Add("sb_slay", function(ply, cmd, args)
 		for k,v in pairs(player.GetAll()) do
 			chat.AddText(v, COLOR_TAG, "[ServerBase] ", COLOR_TEXT, "Admin ", COLOR_ADMIN, ply:Nick(), COLOR_TEXT, " has slain ", COLOR_TARGET, target:Nick())
 		end
-		SBLOG("[ADMIN CMD] - Admin " ..ply:Nick() .. " has SLAIN " ..v:Nick().. " with reason: " ..reason)
+		SBLOG("[ADMIN CMD] - Admin " ..ply:Nick() .. " has SLAIN " ..target:Nick().. " with reason: " ..reason)
 	end
 end)
 	
@@ -398,12 +398,12 @@ function DisableNoclip( objPl )
 	if ( objPl:IsAdmin() ) then
 		local noclip = objPl:GetMoveType() == MOVETYPE_NOCLIP
 		if ( noclip ) then
-			for k,v pairs(player.GetAll()) do
+			for k,v in pairs(player.GetAll()) do
 				chat.AddText(v, COLOR_TAG, "[ServerBase] ", COLOR_TEXT, "Admin ", COLOR_ADMIN, objPl:Nick(), COLOR_TEXT, " has disabled noclip")
 			end
 			SBLOG("[ADMIN CMD - LOG] - Admin " ..objPl:Nick().. " has disabled noclip ")
 		else 
-			for k,v pairs(player.GetAll()) do
+			for k,v in pairs(player.GetAll()) do
 				chat.AddText(v, COLOR_TAG, "[ServerBase] ", COLOR_TEXT, "Admin ", COLOR_ADMIN, objPl:Nick(), COLOR_TEXT, " has enabled noclip")
 			end
 			SBLOG("[ADMIN CMD - LOG] - Admin " ..objPl:Nick().. " has enabled noclip ")
