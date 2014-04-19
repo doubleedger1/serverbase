@@ -15,6 +15,41 @@ surface.CreateFont("Section", {
 	size 		= 22,
 	weight      = 800
 })
+
+hook.Add("OnPlayerChat", "PlayerChattingggg", function(ply, text, teamonly, dead)
+	local tab = {}
+	if ( dead ) then
+		table.insert( tab, Color(255, 2, 2) ) 
+		table.insert( tab, "(DEAD)" )
+	end
+	
+	if ( teamonly ) then
+		table.insert( tab, Color(2, 255, 2) )
+		table.insert( tab, "(TEAM)" )
+	end
+	
+	
+	if 	( IsValid(ply) ) then
+		if ( ply:IsSuperAdmin() ) then
+			table.insert( tab, COLOR_SUPER )
+			table.insert( tab, "(Super Admin) ")
+		elseif ( ply:IsAdmin() ) then
+			table.insert( tab, COLOR_ADMIN )
+			table.insert( tab, "(Admin) ")
+		end
+		table.insert( tab, team.GetColor(ply:Team()) )
+		table.insert( tab, ply:GetName() )
+	else
+		table.insert( tab, "Console" )
+	end
+	
+	table.insert(tab, Color(255, 255, 255))
+	table.insert(tab, ": " ..text)
+	
+	chat.AddText(unpack(tab))
+	
+	return true
+end)
 	
 concommand.Add("sb_admin", function(ply, cmd, args)
 	if ( !ply:IsAdmin() ) then return end
@@ -271,3 +306,4 @@ concommand.Add("sb_admin", function(ply, cmd, args)
 
 	
 end)
+
