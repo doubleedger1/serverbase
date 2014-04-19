@@ -3,8 +3,9 @@ function SKIN:PaintFrame(panel, w, h)
 		
 		draw.RoundedBox(-1, 0, 0, w, h, Color(0, 0, 0, 200))
 		panel:SetTitle("")
+		draw.RoundedBox(-1, 0, 0, w, 25, Color(0, 100, 150, 255 ))
 		surface.SetDrawColor(Color(0, 0, 0, 200))
-		draw.RoundedBox(-1, 0, 0, w, 25, Color(0, 75, 75, 255 ))
+		surface.DrawOutlinedRect(0, 0, w, h)
 end
 	
 function SKIN:PaintPanel(panel, w, h)
@@ -35,6 +36,8 @@ function SKIN:PaintListViewLine(panel, w, h)
 		return draw.RoundedBox(-1, 0, 0, w, h, Color(150, 150, 150, 200))
 	end
 	draw.RoundedBox(-1, 0, 0, w, h, Color(200, 200, 200, 200))
+	surface.SetDrawColor(Color(0, 0, 0, 200))
+	surface.DrawOutlinedRect(0, 0, w, h)
 end
 
 function SKIN:PaintPropertySheet(panel, w, h)
@@ -65,7 +68,7 @@ function SKIN:PaintButton(panel, w, h)
 	end
 	surface.SetDrawColor(Color(255, 255, 255, 255))
 	surface.DrawOutlinedRect(0, 0, w, h)
-	draw.RoundedBox(-1, 0, 0, w, h, Color(0, 75, 75, 255))
+	draw.RoundedBox(-1, 0, 0, w, h, Color(0, 100, 150, 255))
 end
 
 function SKIN:PaintWindowMinimizeButton(panel)
