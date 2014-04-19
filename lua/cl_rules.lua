@@ -53,5 +53,6 @@ concommand.Add("sb_rules", function(ply, cmd, args)
 		ruleslist:SetText(v)
 		ruleslist:SetFont("AFont")
 		ruleslist:SetSize(600, 20)
+		ruleslist:SetColor(Color(255, 255, 255, 255))
 	end
 end)
