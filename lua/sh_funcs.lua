@@ -74,6 +74,17 @@ function TargetUserID(id)
 	end
 end
 
+-- Helper function to get the userID from chat command specification
+function ReturnUserID(ply, user)
+	local username = user
+	for k, v in pairs (player.GetAll()) do
+		if ( username == v:Nick() ) then
+			chat.AddText(ply, COLOR_TAG, "[SB] ", COLOR_TEXT, "The UserID of " ..v:Nick().. " is ", COLOR_TARGET, tostring(v:UserID()))
+			return
+		end
+	end
+end
+
 local meta = FindMetaTable("Player")
 
 -- For those who want mods can edit the code to their liking to include some mods for the system
