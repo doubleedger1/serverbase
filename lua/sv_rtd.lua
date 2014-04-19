@@ -9,7 +9,9 @@ RTD_OUTCOME[1] = {
 	func = function(ply)
 		local givehealth = math.random(10, 50)
 		ply:SetHealth(ply:Health() + givehealth)
-		PrintMessage(HUD_PRINTTALK, ply:Nick().. " had their health set to " ..ply:Health().. " by the dice!")
+		for k ,v in pairs(player.GetAll()) do
+			chat.AddText(v, COLOR_TAG, "[RTD] ", COLOR_TEXT, ply:Nick().. " had their health set to " ..ply:Health().. " by the dice!")
+		end
 	end
 }
 
@@ -19,12 +21,14 @@ RTD_OUTCOME[2] = {
 		local takehealth = math.random(10, 50)
 		if takehealth > ply:Health() then
 			ply:SetHealth(1)
-			ply:ChatPrint("You have had your health set to 1 due to having less health than the remove health.")
-			PrintMessage(HUD_PRINTTALK, ply:Nick().. " had their health set to " ..ply:Health().. " by the dice!")
+			for k, v in pairs (player.GetAll()) do
+				chat.AddText(v, COLOR_TAG, "[RTD] ", COLOR_TEXT, ply:Nick().. " had theirhealth set to " ..ply:Health().. " by the dice!")
+			end
 		else
 			ply:SetHealth(ply:Health() - takehealth)
-			ply:ChatPrint("You have lost " ..takehealth.. "HP!")
-			PrintMessage(HUD_PRINTTALK, ply:Nick().. " had their health set to " ..ply:Health().. " by the dice!")
+			for k, v in pairs (player.GetAll()) do
+				chat.AddText(v, COLOR_TAG, "[RTD] ", COLOR_TEXT, ply:Nick().. " had their health set to " ..ply:Health().. " by the dice!")
+			end
 		end
 	end
 }
@@ -32,8 +36,10 @@ RTD_OUTCOME[2] = {
 RTD_OUTCOME[3] = {
 	name = "slay",
 	func = function(ply)
+		for k, v in pairs (player.GetAll()) do
+			chat.AddText(v, COLOR_TAG, "[RTD] ", COLOR_TEXT, ply:Nick().. " has been killed by the dice!")
+		end
 		ply:Kill()
-		PrintMessage(HUD_PRINTTALK, ply:Nick().. " has been killed by the dice!")
 	end
 }
 
@@ -41,7 +47,9 @@ RTD_OUTCOME[4] = {
 	name = "god",
 	func = function(ply)
 		ply:GodEnable()
-		PrintMessage(HUD_PRINTTALK, ply:Nick().. " has been given temporary godmode!")
+		for k, v in pairs (player.GetAll()) do
+			chat.AddText(v, COLOR_TAG, "[RTD] ", COLOR_TEXT, ply:Nick().. " has been given temporary godmode!")
+		end
 		timer.Simple(10, function()
 			ply:GodDisable()
 		end)
@@ -51,7 +59,9 @@ RTD_OUTCOME[4] = {
 RTD_OUTCOME[5] = {
 	name = "nothing",
 	func = function(ply)
-		PrintMessage(HUD_PRINTTALK, ply:Nick().. " received nothing from the dice.")
+		for k, v in pairs (player.GetAll()) do
+			chat.AddText(v, COLOR_TAG, "[RTD] ", ply:Nick().. " has received nothing from the dice.")
+		end
 	end
 }
 
@@ -59,8 +69,10 @@ RTD_OUTCOME[6] = {
 	name = "jumppos",
 	func = function(ply)
 		local before = ply:GetJumpPower()
+		for k, v in pairs (player.GetAll()) do
+			chat.AddText(v, COLOR_TAG, "[RTD] ", COLOR_TEXT, ply:Nick().. " received a temporary jump power boost!")
+		end
 		ply:SetJumpPower(250)
-		PrintMessage(HUD_PRINTTALK, ply:Nick().. " received a temporary jump power boost!")
 		timer.Simple(10, function()
 			ply:SetJumpPower(before)
 		end)
@@ -71,8 +83,10 @@ RTD_OUTCOME[7] = {
 	name = "jumpneg",
 	func = function(ply)
 		local before = ply:GetJumpPower()
+		for k, v in pairs (player.GetAll()) do
+			chat.AddText(v, COLOR_TAG, "[RTD] ", COLOR_TEXT, ply:Nick().. " received a temporary jump power reduction!")
+		end
 		ply:SetJumpPower(150)
-		PrintMessage(HUD_PRINTTALK, ply:Nick().. " received a temporary jump power reduction!")
 		timer.Simple(10, function()
 			ply:SetJumpPower(before)
 		end)
@@ -82,27 +96,34 @@ RTD_OUTCOME[7] = {
 RTD_OUTCOME[8] = {
 	name = "ignition",
 	func = function(ply)
+	local duration = math.random(1, 10)
+		for k, v in pairs (player.GetAll()) do
+			chat.AddText(v, COLOR_TAG, "[RTD] ", COLOR_TEXT, ply:Nick().. " has been set on fire for " ..duration.. " seconds!")
+		end
 		local duration = math.random(1, 10)
 		ply:Ignite(duration, 0)
-		PrintMessage(HUD_PRINTTALK, ply:Nick().. " has been set on fire for " ..duration.. " seconds!")
 	end
 }
 
 RTD_OUTCOME[9] = {	
 	name = "heavyboots",
 	func = function(ply)
+		for k ,v in pairs (player.GetAll()) do
+			chat.AddText(v, COLOR_TAG, "[RTD] ", COLOR_TEXT, ply:Nick().. " has been given heavy boots by the dice!")
+		end
 		ply.HeavyBoots = true
 		ply.PreviousJumpPower = ply:GetJumpPower()
 		ply:SetJumpPower(0)
-		PrintMessage(HUD_PRINTTALK, ply:Nick().. " has been given heavy boots by the dice!")
-		ply:ChatPrint("You'll be able to jump after you have died!")
+		chat.AddText(ply, COLOR_TAG, "[RTD] ", COLOR_TEXT, "You'll be able to jump after you have died!")
 	end
 }
 
 RTD_OUTCOME[10] = {
 	name = "regeneration",
 	func = function(ply)
-		PrintMessage(HUD_PRINTTALK, ply:Nick().. " has been given temporary health regeration by the dice!")
+		for k, v in pairs (player.GetAll()) do
+			chat.AddText(v, COLOR_TAG, "[RTD] ", COLOR_TEXT, ply:Nick().. " has been given temporary health regeration by the dice!")
+		end
 		timer.Create(ply:Nick(), 1, math.random(5,20), function()
 			if ( ply:Health() + 1 > 100 ) then
 				ply:SetHealth(100)
@@ -132,7 +153,7 @@ function RollTheDice(ply)
 	ply.rtdcooldown = ply.rtdcooldown or 0
 	
 	if ( ply.rtdcooldown > CurTime() ) then
-		ply:ChatPrint("You have to wait " ..math.Round(ply.rtdcooldown - CurTime()).. " seconds to roll again.")
+		chat.AddText(ply, COLOR_TAG, "[RTD] ", COLOR_TEXT, "You have to wait " ..math.Round(ply.rtdcooldown - CurTime()).. " seconds to roll again.")
 		return
 	end
 	
@@ -140,7 +161,7 @@ function RollTheDice(ply)
 		outcome.func(ply)
 	end
 	
-	ply:ChatPrint("You have rolled the dice.")
+	chat.AddText(ply, COLOR_TAG, "[RTD] ", COLOR_TEXT, "You have rolled the dice.")
 	
 	ply.rtdcooldown = CurTime() + 120
 end
@@ -152,7 +173,7 @@ hook.Add("PlayerSay", "PlayerRollTheDice", function(ply, text, args)
 			RollTheDice(ply)
 			return ""
 		else
-			ply:ChatPrint("[SERVERBASE] The RTD feature has been disabled!")
+			chat.AddText(ply, COLOR_TAG, "[ServerBase]", COLOR_TEXT, "The RTD feature has been disabled!")
 			return ""
 		end
 	end
