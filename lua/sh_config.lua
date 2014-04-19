@@ -1,4 +1,4 @@
-/*
+*
 	Configuration options below for your customization
 */
 
@@ -20,6 +20,7 @@ RULES_ENABLED = true -- Set this to false if you don't wish to use the rules fea
 COLOR_TAG = Color(0, 74, 74) --Default: tale
 COLOR_TEXT = Color(255, 255, 255) --Default: white
 COLOR_ADMIN = Color(0, 255, 0) --Default: green
+COLOR_SUPER = Color(0, 200, 200) --Default: cyan
 COLOR_TARGET = Color(255, 0, 0) --Default: red
 COLOR_REASON = Color(0, 0, 0) --Default: black
 
@@ -66,9 +67,10 @@ Admins = {
 ----------------------------------------------------
 -- Add your own RTD chat commands
 ----------------------------------------------------
-RTDChatCommand = {
+RTDChatCommands = {
 	"/rtd",
-	"!rtd"
+	"!rtd",
+	"rtd"
 }
 
 
