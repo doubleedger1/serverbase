@@ -85,3 +85,4 @@ hook.Add("PlayerSay", "adminchat", function(ply, text, public)
 		end
 		return ""
 	end
+end)
