@@ -1,7 +1,3 @@
-*
-	Configuration options below for your customization
-*/
-
 ----------------------------------------------------
 -- Enable/disable different features
 ----------------------------------------------------
