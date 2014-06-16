@@ -1,5 +1,10 @@
 local SKIN = {}
 function SKIN:PaintFrame(panel, w, h)
+	draw.RoundedBox(-1, 0, 0, w, h, Color(35, 55, 70, 255))
+	panel:SetTitle("")
+	draw.RoundedBox(-1, 0, 0, w, 25, Color(0, 100, 150, 255 ))
+	surface.SetDrawColor(Color(0, 0, 0, 200))
+	surface.DrawOutlinedRect(0, 0, w, h)
 		
 		draw.RoundedBox(-1, 0, 0, w, h, Color(0, 0, 0, 200))
 		panel:SetTitle("")
@@ -7,17 +12,16 @@ function SKIN:PaintFrame(panel, w, h)
 		surface.SetDrawColor(Color(0, 0, 0, 200))
 		surface.DrawOutlinedRect(0, 0, w, h)
 end
+
 	
 function SKIN:PaintPanel(panel, w, h)
-	
-	draw.RoundedBox(-1, 0, 0, w, h, Color(220, 220, 220 , 255))
+	draw.RoundedBox(-1, 0, 0, w, h, Color(0, 0,0 , 200))
 	surface.SetDrawColor(Color(0, 0, 0, 200))
 	surface.DrawOutlinedRect(0, 0, w, h)
 end
 
 function SKIN:PaintListView(panel, w, h)
-		
-	draw.RoundedBox(-1, 0, 0, w, h, Color(200, 200, 200, 250))
+	draw.RoundedBox(-1, 0, 0, w, h, Color(2, 2, 2, 200))
 	surface.SetDrawColor(Color(0, 0, 0, 200))
 	surface.DrawOutlinedRect(0, 0, w, h)
 end
@@ -41,18 +45,15 @@ function SKIN:PaintListViewLine(panel, w, h)
 end
 
 function SKIN:PaintPropertySheet(panel, w, h)
-	
 	draw.RoundedBox(-1, 0, 0, w, h, Color(0, 0, 0, 200))
 end
 
 function SKIN:PaintToolTip(panel, w, h)
-
 	panel:SetTextColor(Color(255, 255, 255, 255))
 	return draw.RoundedBox(-1, 0, 0, w, h, Color(0, 0, 0, 200))
 end
 
 function SKIN:PaintButton(panel, w, h)
-	
 	panel:SetTextColor(Color(255, 255, 255, 255))
 	if ( panel.Depressed ) then
 		return draw.RoundedBox(-1, 0, 0, w, h, Color(0, 0, 0, 255))
@@ -80,3 +81,4 @@ function SKIN:PaintWindowMaximizeButton(panel)
 end
 
 derma.DefineSkin("ServerBase", "Admin derma by Doubleedge.", SKIN, "Default")
+
