@@ -8,7 +8,13 @@ concommand.Add("sb_rules", function(ply, cmd, args)
 	frame:Center()
 	frame:SetSkin("ServerBase")
 	frame:ShowCloseButton(false)
-	frame:MakePopup()
+	
+timer.Simple(1, function()
+	local Panel = vgui.Create("DPanelList", frame)
+	Panel:SetSize(650, 450)
+	Panel:SetPos(20, 40)
+	Panel:EnableVerticalScrollbar(true)
+	Panel:EnableHorizontal(true)
 	
 	local titleicon = vgui.Create("DImage", frame)
 	titleicon:SetSize(16, 16)
@@ -48,11 +54,13 @@ concommand.Add("sb_rules", function(ply, cmd, args)
 	end
 
 	for k, v in pairs (Rules) do
-		local ruleslist = vgui.Create("DLabel", frame)
+		local ruleslist = vgui.Create("DLabel", Panel)
 		ruleslist:SetPos(10, 26 * k)
-		ruleslist:SetText(v)
+		ruleslist:SetText(k..") " ..v)
 		ruleslist:SetFont("AFont")
 		ruleslist:SetSize(600, 20)
 		ruleslist:SetColor(Color(255, 255, 255, 255))
+		Panel:AddItem(ruleslist)
 	end
+end)
 end)
