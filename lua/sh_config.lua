@@ -75,6 +75,6 @@ RTDChatCommands = {
 ----------------------------------------------------
 // Add rules by putting Rules[#ascending#] = "message as a string"
 Rules = {}
-Rules[1] = "1) Don't spam the chatbox or the voicechat."
-Rules[2] = "2) Don't speedhack, wallhack, aimbot or hack in any way, shape or form."
-Rules[3] = "3) Put your server rules here as I can't think of any other basic ones."
+Rules[1] = "Don't spam the chatbox or the voicechat."
+Rules[2] = "Don't speedhack, wallhack, aimbot or hack in any way, shape or form."
+Rules[3] = "Put your server rules here as I can't think of any other basic ones."
