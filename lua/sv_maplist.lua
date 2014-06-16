@@ -32,7 +32,6 @@ function GetWinningMap()
 	for k, v in pairs (MapsList) do
 		table.insert(votes, v["votes"])
 	end
-	PrintTable(votes)
 	return table.GetWinningKey(votes)
 end
 
@@ -51,6 +50,4 @@ net.Receive("receivevotes", function(len)
 	
 	MapsList = newtablemap
 	Votes = newtablevote
-	PrintTable(MapsList)
-	PrintTable(Votes)
 end)
