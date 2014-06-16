@@ -5,14 +5,19 @@ ChatCommands = {
 	servers = "sb_portal",
 	portal = "sb_portal",
 	rules = "sb_rules",
-
+	
+	votemap = "sb_votemap",
+	maplist = "sv_votemap",
 	ban = "sb_ban",
 	kick = "sb_kick",
 	slay = "sb_slay",
 	mute = "sb_mute",
 	voicemute = "sb_voicemute",
 	bring = "sb_teleporttome",
-	goto = "sb_teleporttothem"
+	goto = "sb_teleporttothem",
+	shop = "sb_shop",
+	store = "sb_shop",
+	buy = "sb_shop"
 }
 
 function AddChatCommand(chatCmd, consoleCmd)
