@@ -1,15 +1,17 @@
-concommand.Add("sb_portal", function(ply, cmd, args)
+concommand.Add("sb_portal", function(ply, cmd, args) 
+	local aftertransition = false
 	if ( !PORTAL_ENABLED ) then
 		ply:ChatPrint("[SERVERBASE] The server portal feature has been disabled!")
 		return 
 	end
+	
 	local portalframe = vgui.Create("DFrame")
 	portalframe:SetSize(500, 500)
-	portalframe:SetPos(ScrW() / 4, ScrH() / 4)
+	portalframe:Center()
 	portalframe:SetSkin("ServerBase")
-	portalframe:MakePopup(true)
 	portalframe:ShowCloseButton(false)
-	
+
+timer.Simple(1, function()
 	local titleicon = vgui.Create("DImage", portalframe)
 	titleicon:SetSize(16, 16)
 	titleicon:SetPos(5, 5)
@@ -88,10 +90,9 @@ concommand.Add("sb_portal", function(ply, cmd, args)
 			return draw.RoundedBox(-1, 0, 0, w, h, Color(0, 0, 0, 200))
 		end
 		surface.SetDrawColor(Color(255, 255, 255, 255))
-		surface.DrawOutlinedRect(0, 0, w, h)
-		draw.RoundedBox(-1, 0, 0, w, h, Color(10, 0, 75, 255))
+		draw.RoundedBox(-1, 0, 0, w, h, Color(0, 100, 150, 255))
 	end
 		serverpanel:AddItem(button)
 	end
-	
+end)
 end)
