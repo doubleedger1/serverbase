@@ -134,6 +134,31 @@ RTD_OUTCOME[10] = {
 	end
 }
 
+RTD_OUTCOME[11] = {
+	name = "coinspos",
+	func = function(ply)
+		local coins = math.Random(100, 5000)
+		for k, v in pairs (player.GetAll()) do
+			chat.AddText(v, COLOR_TAG, "[RTD] ", COLOR_TEXT, ply:Nick().. " has been given ", COLOR_ADMIN, coins.. " coins.")
+		end
+		ply:AddMoney(coins)
+	end
+}
+
+RTD_OUTCOME[12] = {
+	name = "coinsneg",
+	func = function(ply)
+		local coins = math.Random(100, 5000)
+		if ( ply:GetMoney() < coins ) then
+			coins = ply:GetMoney()
+		end
+		for k, v in pairs (player.GetAll()) do
+			chat.AddText(v, COLOR_TAG, "[RTD] ", COLOR_TEXT, ply:Nick().. " has lost ", COLOR_TARGET, coins.. " coins.")
+		end
+		ply:TakeMoney(coins)
+	end
+}
+
 hook.Add("PlayerSpawn", "SpawnCheck", function(ply)
 	if ( ply.HeavyBoots == true ) then
 		ply.HeavyBoots = false
