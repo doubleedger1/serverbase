@@ -5,6 +5,7 @@ concommand.Add("sb_votemap", function(ply, cmd, args)
 	frame:Center()
 	frame:SetSkin("ServerBase")
 	frame:MakePopup(true)
+	frame:ShowCloseButton(false)
 	
 	local maplistpanel = vgui.Create("DPanelList", frame)
 	maplistpanel:SetSize(1000 * scale, 600 * scale)
@@ -28,10 +29,10 @@ concommand.Add("sb_votemap", function(ply, cmd, args)
 	label:SetText("Votemap - Vote for the next map!")
 	label:SetSize(400, 20)
 	label:SetPos(25, 3)
-
+	
 	local closebutton = vgui.Create("DButton", frame)
 	closebutton:SetSize(30, 25)
-	closebutton:SetPos(670, 0)
+	closebutton:SetPos(970 * scale, 0)
 	closebutton:SetText("X")
 	closebutton.Paint = function()
 		local w, h = closebutton:GetSize()
@@ -53,7 +54,7 @@ concommand.Add("sb_votemap", function(ply, cmd, args)
 	closebutton.DoClick = function()
 		frame:Close()
 	end
-	
+
 	net.Start("sendmaps")
 	net.SendToServer()
 	
