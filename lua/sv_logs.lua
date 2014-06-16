@@ -24,12 +24,12 @@ hook.Add("PlayerInitialSpawn", "LogPlayerSpawning", function(ply)
 end)
 
 hook.Add("PlayerDeath", "LogDeath", function(v, w, k)
-	if ( v == k ) then
+	if ( v == k ) or ( !k:IsPlayer() ) then
 		SBLOG("[DEATH LOG] - " ..v:Nick().. " KILLED THEMSELVES")
 		return
 	end
 	
-	SBLOG("[DEATH LOG] - " ..v:Nick().. "was KILLED by " ..k.. " using " ..w)
+	SBLOG("[DEATH LOG] - " ..v:Nick().. "was KILLED by " ..k:Nick().. " using " ..w:GetClass())
 end)
 
 function SBLOG(information)
