@@ -57,13 +57,19 @@ function meta:GetMoney()
 	return self.coins
 end
 
+--[[Changed to every hour since it now saves on player disconnect. 
+This is for just in case a server crash happens players shouldn't loose much.]]
 if ( !timer.Exists("accountsaveinterval") ) then
-	timer.Create("accountsaveinterval", 60, 0, function() 
+	timer.Create("accountsaveinterval", 3600, 0, function() 
 		for k, v in pairs (player.GetAll()) do
 			v:SaveAccount()
 		end
 	end)
 end
+
+hook.Add("PlayerDisconnected", "DisconnectSaveAccount", function(ply)
+	ply:SaveAccount()
+end)
 
 function meta:AddMoney(i)
 	self.coins = self.coins + i
