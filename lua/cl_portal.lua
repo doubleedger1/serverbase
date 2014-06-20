@@ -94,4 +94,3 @@ concommand.Add("sb_portal", function(ply, cmd, args)
 		serverpanel:AddItem(button)
 	end
 end)
-end)
