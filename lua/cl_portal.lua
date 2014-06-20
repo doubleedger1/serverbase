@@ -11,7 +11,6 @@ concommand.Add("sb_portal", function(ply, cmd, args)
 	portalframe:SetSkin("ServerBase")
 	portalframe:ShowCloseButton(false)
 
-timer.Simple(1, function()
 	local titleicon = vgui.Create("DImage", portalframe)
 	titleicon:SetSize(16, 16)
 	titleicon:SetPos(5, 5)
