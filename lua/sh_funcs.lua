@@ -30,35 +30,35 @@ end
 -------------------------------------------------------------------------------------------------------------------------*/
 if SERVER then
 	chat = { }
-	function chat.AddText( ... )
+	function chat.AddText(...)
 		local arg = {...}
-		if ( type( arg[1] ) == "Player" ) then ply = arg[1] end
+		if (type(arg[1]) == "Player") then ply = arg[1] end
 		
-		umsg.Start( "AddText", ply )
-			umsg.Short( #arg )
-			for _, v in pairs( arg ) do
-				if ( type( v ) == "string" ) then
-					umsg.String( v )
-				elseif ( type ( v ) == "table" ) then
-					umsg.Short( v.r )
-					umsg.Short( v.g )
-					umsg.Short( v.b )
-					umsg.Short( v.a )
+		net.Start("AddText")
+			net.WriteInt(#arg, 16)
+			for _, v in pairs(arg) do
+				if (type(v) == "string") then
+					net.WriteString( v )
+				elseif (type(v) == "table") then
+					net.WriteInt(v.r, 16)
+					net.WriteInt(v.g, 16)
+					net.WriteInt(v.b, 16)
+					net.WriteInt(v.a, 16)
 				end
 			end
-		umsg.End( )
+		net.Send(ply)
 	end
 else
-	usermessage.Hook( "AddText", function( um )
-		local argc = um:ReadShort( )
-		local args = { }
-		for i = 1, argc / 2, 1 do
-			table.insert( args, Color( um:ReadShort( ), um:ReadShort( ), um:ReadShort( ), um:ReadShort( ) ) )
-			table.insert( args, um:ReadString( ) )
+	net.Receive("AddText", function()
+		local argc = net.ReadInt(16)
+		local args = {}
+		for i=1, argc/2, 1 do
+			table.insert(args, Color( net.WriteInt(16), net.WriteInt(16), net.WriteInt(16), net.WriteInt(16) ))
+			table.insert(args, net.ReadString())
 		end
 		
-		chat.AddText( unpack( args ) )
-	end )
+		chat.AddText(unpack(args))
+	end)
 end
 
 -- Helper function to get the target from a UserID
