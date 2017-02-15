@@ -1,5 +1,5 @@
 concommand.Add("sb_votemap", function(ply, cmd, args) 
-	local scale = math.Clamp(ScrH() / 1080, 1, 0.6)
+	local scale = math.Clamp(ScrH() / 1080, 0.6, 1)
 	local frame = vgui.Create("DFrame")
 	frame:SetSize(1000 * scale, 600 * scale)
 	frame:Center()
