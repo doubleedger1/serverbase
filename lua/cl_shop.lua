@@ -14,7 +14,7 @@ net.Receive("updateinfo", function(len)
 end)
 
 hook.Add("HUDPaint", "DrawAccountBox", function()   
-	local scale = math.Clamp(ScrH() / 1080, 1, 0.6)
+	local scale = math.Clamp(ScrH() / 1080, 0.6, 1)
 	local rank = rank
 	local rankcol = rankcol
 	if ( LocalPlayer():IsSuperAdmin() ) then
